@@ -1,0 +1,2874 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1f7a4d" />
+  <title>PETANI Cloud</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #1f7a4d;
+      --primary-dark: #155b38;
+      --secondary: #e8f5ed;
+      --accent: #f2b84b;
+      --bg: #f5f7f6;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --danger: #dc3545;
+      --warning: #f59e0b;
+      --success: #198754;
+      --shadow: 0 8px 25px rgba(0,0,0,.07);
+      --radius: 18px;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* =========================
+       LOGIN / ROLE SELECTION
+    ========================= */
+
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background:
+        linear-gradient(rgba(20,85,51,.88), rgba(20,85,51,.92)),
+        radial-gradient(circle at top right, #8bcf9f, transparent 35%);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 460px;
+      background: white;
+      border-radius: 28px;
+      padding: 32px 25px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.18);
+      text-align: center;
+    }
+
+    .logo {
+      width: 76px;
+      height: 76px;
+      border-radius: 24px;
+      background: var(--secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 38px;
+    }
+
+    .login-card h1 {
+      color: var(--primary);
+      font-size: 32px;
+      margin-bottom: 5px;
+    }
+
+    .login-card .subtitle {
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .role-card {
+      border: 2px solid var(--border);
+      background: white;
+      border-radius: 18px;
+      padding: 20px 12px;
+      transition: .2s;
+    }
+
+    .role-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .role-icon {
+      font-size: 34px;
+      margin-bottom: 8px;
+    }
+
+    .role-card strong {
+      display: block;
+      color: var(--text);
+    }
+
+    .role-card span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .demo-note {
+      margin-top: 22px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* =========================
+       APP LAYOUT
+    ========================= */
+
+    .app {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background: white;
+      border-right: 1px solid var(--border);
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      padding: 22px 15px;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px 25px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--secondary);
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 23px;
+    }
+
+    .brand-text strong {
+      color: var(--primary);
+      font-size: 20px;
+    }
+
+    .brand-text small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .nav-title {
+      color: #9ca3af;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 12px 12px 7px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 13px;
+      border-radius: 12px;
+      margin-bottom: 3px;
+      color: #4b5563;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background: var(--secondary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .nav-icon {
+      width: 22px;
+      text-align: center;
+    }
+
+    .main {
+      margin-left: 250px;
+      padding: 22px 28px 90px;
+    }
+
+    /* =========================
+       TOPBAR
+    ========================= */
+
+    .topbar {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      box-shadow: var(--shadow);
+    }
+
+    .topbar-left h2 {
+      font-size: 20px;
+    }
+
+    .topbar-left p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-button {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: white;
+      position: relative;
+    }
+
+    .notification-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--danger);
+      border-radius: 50%;
+      top: 8px;
+      right: 8px;
+    }
+
+    .user-mini {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 5px;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--secondary);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    /* =========================
+       PAGE
+    ========================= */
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+      animation: fade .2s ease;
+    }
+
+    @keyframes fade {
+      from {
+        opacity: .4;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .welcome {
+      background: linear-gradient(135deg, var(--primary), #2e9961);
+      color: white;
+      border-radius: 24px;
+      padding: 26px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome::after {
+      content: "🌱";
+      position: absolute;
+      font-size: 110px;
+      right: 30px;
+      bottom: -28px;
+      opacity: .18;
+    }
+
+    .welcome h1 {
+      font-size: 25px;
+      margin-bottom: 7px;
+    }
+
+    .welcome p {
+      max-width: 650px;
+      opacity: .88;
+      font-size: 14px;
+    }
+
+    /* =========================
+       CARDS / STATS
+    ========================= */
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: var(--secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .stat-card h3 {
+      margin-top: 13px;
+      font-size: 25px;
+    }
+
+    .stat-card p {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 17px;
+    }
+
+    .card-header h3 {
+      font-size: 17px;
+    }
+
+    .link-button {
+      border: none;
+      background: none;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* =========================
+       QUICK ACTIONS
+    ========================= */
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .quick-btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 17px 10px;
+      border-radius: 15px;
+      text-align: center;
+      transition: .2s;
+    }
+
+    .quick-btn:hover {
+      border-color: var(--primary);
+      background: var(--secondary);
+    }
+
+    .quick-btn div {
+      font-size: 25px;
+      margin-bottom: 7px;
+    }
+
+    .quick-btn span {
+      font-size: 11px;
+      color: #4b5563;
+    }
+
+    /* =========================
+       LIST
+    ========================= */
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .list-item {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .list-main {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .list-icon {
+      width: 43px;
+      height: 43px;
+      border-radius: 12px;
+      background: var(--secondary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 21px;
+      flex-shrink: 0;
+    }
+
+    .list-main strong {
+      font-size: 13px;
+      display: block;
+    }
+
+    .list-main small {
+      color: var(--muted);
+      display: block;
+      margin-top: 3px;
+      font-size: 11px;
+    }
+
+    /* =========================
+       BADGES
+    ========================= */
+
+    .badge {
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge.success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge.warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge.info {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .badge.danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* =========================
+       BUTTONS
+    ========================= */
+
+    .btn {
+      border: none;
+      padding: 10px 15px;
+      border-radius: 11px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: .2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-outline {
+      background: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* =========================
+       SECTION HEADER
+    ========================= */
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .section-header h2 {
+      font-size: 22px;
+    }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    /* =========================
+       FORM
+    ========================= */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 2px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 11px 12px;
+      outline: none;
+      background: white;
+      color: var(--text);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    /* =========================
+       FARM CARDS
+    ========================= */
+
+    .farm-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .farm-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .farm-photo {
+      height: 130px;
+      background:
+        linear-gradient(rgba(31,122,77,.35), rgba(31,122,77,.15)),
+        linear-gradient(135deg, #78b982, #d6e9a8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 55px;
+    }
+
+    .farm-content {
+      padding: 15px;
+    }
+
+    .farm-content h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .farm-location {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .farm-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+    }
+
+    .farm-info div {
+      background: var(--bg);
+      padding: 8px;
+      border-radius: 9px;
+    }
+
+    .farm-info small {
+      display: block;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .farm-info strong {
+      font-size: 12px;
+    }
+
+    /* =========================
+       JOB CARDS
+    ========================= */
+
+    .job-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .job-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .job-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .job-title {
+      display: flex;
+      gap: 10px;
+    }
+
+    .job-icon {
+      width: 45px;
+      height: 45px;
+      background: var(--secondary);
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 23px;
+    }
+
+    .job-card h3 {
+      font-size: 15px;
+    }
+
+    .job-card p {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .job-details {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+      margin: 12px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .job-detail {
+      font-size: 11px;
+    }
+
+    .job-detail span {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .job-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .salary {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 14px;
+    }
+
+    /* =========================
+       TABLE
+    ========================= */
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+
+    /* =========================
+       PROFILE
+    ========================= */
+
+    .profile-card {
+      max-width: 800px;
+    }
+
+    .profile-head {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .profile-avatar {
+      width: 75px;
+      height: 75px;
+      background: var(--secondary);
+      color: var(--primary);
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .profile-head h2 {
+      margin-bottom: 5px;
+    }
+
+    .profile-head p {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* =========================
+       MOBILE NAV
+    ========================= */
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 7px;
+      z-index: 100;
+      box-shadow: 0 10px 35px rgba(0,0,0,.15);
+    }
+
+    .mobile-nav-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .mobile-nav button {
+      border: none;
+      background: transparent;
+      padding: 7px 2px;
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .mobile-nav button.active {
+      background: var(--secondary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .mobile-nav button div {
+      font-size: 18px;
+      margin-bottom: 3px;
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      width: 100%;
+      max-width: 550px;
+      border-radius: 22px;
+      padding: 23px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .close-modal {
+      border: none;
+      background: #f3f4f6;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+    }
+
+    /* =========================
+       TOAST
+    ========================= */
+
+    .toast {
+      position: fixed;
+      right: 25px;
+      bottom: 25px;
+      background: #1f2937;
+      color: white;
+      padding: 13px 18px;
+      border-radius: 12px;
+      font-size: 12px;
+      z-index: 500;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: .3s;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 1000px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .farm-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 12px 12px 85px;
+      }
+
+      .topbar {
+        border-radius: 15px;
+        padding: 10px 12px;
+      }
+
+      .topbar-left h2 {
+        font-size: 17px;
+      }
+
+      .user-mini span {
+        display: none;
+      }
+
+      .welcome {
+        padding: 22px;
+      }
+
+      .welcome h1 {
+        font-size: 21px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .stat-card {
+        padding: 14px;
+      }
+
+      .stat-card h3 {
+        font-size: 21px;
+      }
+
+      .quick-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .farm-grid,
+      .job-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: auto;
+      }
+
+      .mobile-nav {
+        display: block;
+      }
+
+      .section-header {
+        align-items: flex-start;
+      }
+
+      .section-header h2 {
+        font-size: 19px;
+      }
+    }
+
+
+    /* =========================
+       MARKETPLACE
+    ========================= */
+    .market-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+    .market-search{flex:1;min-width:220px;position:relative}
+    .market-search input{padding-left:38px}
+    .market-search span{position:absolute;left:13px;top:10px;font-size:17px}
+    .market-tabs{display:flex;gap:7px;margin-bottom:18px;overflow-x:auto;padding-bottom:2px}
+    .market-tab{border:1px solid var(--border);background:#fff;color:#4b5563;padding:9px 14px;border-radius:12px;font-size:11px;font-weight:600;white-space:nowrap}
+    .market-tab.active{background:var(--secondary);color:var(--primary);border-color:#b9dec7}
+    .category-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px}
+    .category-btn{border:1px solid var(--border);background:#fff;border-radius:14px;padding:12px 7px;text-align:center;font-size:10px;color:#4b5563}
+    .category-btn:hover{border-color:var(--primary);background:var(--secondary)}
+    .category-btn div{font-size:22px;margin-bottom:5px}
+    .product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+    .product-card{background:#fff;border:1px solid var(--border);border-radius:17px;overflow:hidden;box-shadow:var(--shadow)}
+    .product-photo{height:125px;background:linear-gradient(135deg,#e8f5ed,#f7e8bb);display:flex;align-items:center;justify-content:center;font-size:52px;position:relative}
+    .product-photo .promo-tag{position:absolute;left:9px;top:9px;background:#fff3cd;color:#92400e;border-radius:20px;padding:4px 7px;font-size:9px;font-weight:700}
+    .product-body{padding:14px}
+    .product-body h3{font-size:14px;margin-bottom:4px}
+    .product-body p{font-size:10px;color:var(--muted);line-height:1.45;min-height:29px}
+    .product-price{font-size:15px;color:var(--primary);font-weight:700;margin:9px 0 2px}
+    .product-meta{font-size:10px;color:var(--muted);margin-bottom:10px}
+    .product-actions{display:flex;gap:7px}
+    .product-actions .btn{flex:1}
+    .service-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+    .service-card{background:#fff;border:1px solid var(--border);border-radius:17px;padding:17px;box-shadow:var(--shadow)}
+    .service-top{display:flex;gap:11px;align-items:flex-start}
+    .service-icon{width:48px;height:48px;border-radius:13px;background:var(--secondary);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+    .service-card h3{font-size:14px}.service-card p{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.45}
+    .service-info{border-top:1px solid var(--border);margin-top:13px;padding-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:10px}
+    .service-info span{display:block;color:var(--muted);margin-bottom:2px}
+    .service-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:13px}
+    .store-banner{background:linear-gradient(135deg,var(--primary),#2e9961);color:#fff;border-radius:20px;padding:19px 21px;display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:20px}
+    .store-banner h3{font-size:17px}.store-banner p{font-size:11px;opacity:.86;margin-top:4px}
+    .store-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .cart-pill{position:relative}.cart-count{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;border-radius:50%;background:var(--danger);color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700}
+    .cart-list{display:flex;flex-direction:column;gap:10px}.cart-item{display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:14px;padding:12px}.cart-thumb{width:48px;height:48px;border-radius:12px;background:var(--secondary);display:flex;align-items:center;justify-content:center;font-size:24px}.cart-item-main{flex:1}.cart-item-main strong{font-size:12px}.cart-item-main small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.cart-total{display:flex;justify-content:space-between;border-top:1px solid var(--border);margin-top:15px;padding-top:15px;font-weight:700}
+    .shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.shop-card{background:#fff;border:1px solid var(--border);border-radius:17px;padding:17px;box-shadow:var(--shadow)}.shop-head{display:flex;gap:10px;align-items:center}.shop-logo{width:48px;height:48px;border-radius:14px;background:var(--secondary);display:flex;align-items:center;justify-content:center;font-size:24px}.shop-card h3{font-size:14px}.shop-card p{font-size:10px;color:var(--muted);margin-top:3px}.shop-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:14px}.shop-stats div{background:var(--bg);border-radius:9px;padding:8px;text-align:center}.shop-stats strong{display:block;font-size:12px}.shop-stats small{font-size:8px;color:var(--muted)}
+    @media(max-width:1000px){.product-grid{grid-template-columns:repeat(3,1fr)}.category-grid{grid-template-columns:repeat(3,1fr)}.shop-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:700px){.product-grid{grid-template-columns:repeat(2,1fr);gap:10px}.service-grid,.shop-grid{grid-template-columns:1fr}.product-photo{height:105px}.category-grid{grid-template-columns:repeat(3,1fr)}.store-banner{align-items:flex-start;flex-direction:column}}
+
+  </style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     LOGIN / ROLE SELECTION
+===================================================== -->
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+
+    <div class="logo">🌱</div>
+
+    <h1>PETANI</h1>
+    <p class="subtitle">Ekosistem Digital Pertanian</p>
+
+    <div class="role-grid">
+
+      <button class="role-card" onclick="loginAs('pengguna')">
+        <div class="role-icon">👨‍🌾</div>
+        <strong>Petani Pengguna</strong>
+        <span>Petani, pemilik & pengelola lahan</span>
+      </button>
+
+      <button class="role-card" onclick="loginAs('mitra')">
+        <div class="role-icon">🧑‍🌾</div>
+        <strong>Petani Mitra</strong>
+        <span>Pemanen, pekerja & penyedia jasa</span>
+      </button>
+
+    </div>
+
+    <p class="demo-note">
+      Prototype PETANI Cloud v0.1<br>
+      Pilih jenis akun untuk mencoba aplikasi.
+    </p>
+
+  </div>
+</div>
+
+
+<!-- =====================================================
+     MAIN APPLICATION
+===================================================== -->
+
+<div class="app" id="app">
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="brand-icon">🌱</div>
+      <div class="brand-text">
+        <strong>PETANI</strong>
+        <small>Cloud Ecosystem</small>
+      </div>
+    </div>
+
+    <div class="nav-title">Menu Utama</div>
+
+    <button class="nav-item active" data-page="dashboard" onclick="showPage('dashboard', this)">
+      <span class="nav-icon">🏠</span>
+      Dashboard
+    </button>
+
+    <button class="nav-item" data-page="lahan" onclick="showPage('lahan', this)">
+      <span class="nav-icon">🌱</span>
+      Lahan Saya
+    </button>
+
+    <button class="nav-item" data-page="pekerjaan" onclick="showPage('pekerjaan', this)">
+      <span class="nav-icon">📋</span>
+      Pekerjaan
+    </button>
+
+    <button class="nav-item" data-page="panen" onclick="showPage('panen', this)">
+      <span class="nav-icon">🌾</span>
+      Hasil Panen
+    </button>
+
+    <button class="nav-item" data-page="transaksi" onclick="showPage('transaksi', this)">
+      <span class="nav-icon">💰</span>
+      Transaksi
+    </button>
+
+    <button class="nav-item" data-page="marketplace" onclick="showPage('marketplace', this)">
+      <span class="nav-icon">🛒</span>
+      Marketplace
+    </button>
+
+    <button class="nav-item" data-page="toko" onclick="showPage('toko', this)">
+      <span class="nav-icon">🏪</span>
+      Toko Saya
+    </button>
+
+
+    <div class="nav-title">Lainnya</div>
+
+    <button class="nav-item" data-page="notifikasi" onclick="showPage('notifikasi', this)">
+      <span class="nav-icon">🔔</span>
+      Notifikasi
+    </button>
+
+    <button class="nav-item" data-page="profil" onclick="showPage('profil', this)">
+      <span class="nav-icon">👤</span>
+      Profil
+    </button>
+
+    <button class="nav-item" onclick="logout()">
+      <span class="nav-icon">↪️</span>
+      Keluar
+    </button>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+      <div class="topbar-left">
+        <h2 id="pageTitle">Dashboard</h2>
+        <p id="pageSubtitle">Ringkasan aktivitas pertanian Anda</p>
+      </div>
+
+      <div class="top-actions">
+
+        <button class="icon-button" onclick="showPage('notifikasi')">
+          🔔
+          <span class="notification-dot"></span>
+        </button>
+
+        <div class="user-mini">
+          <div class="avatar" id="topAvatar">AR</div>
+          <span id="topName">Andi Rahman</span>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         DASHBOARD
+    ================================================= -->
+
+    <section class="page active" id="page-dashboard">
+
+      <div class="welcome">
+        <h1 id="welcomeTitle">Selamat datang, Andi! 👋</h1>
+        <p id="welcomeText">
+          Kelola lahan, pekerjaan, hasil panen, dan aktivitas pertanian Anda dalam satu tempat.
+        </p>
+      </div>
+
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span>Jumlah Lahan</span>
+            <div class="stat-icon">🌱</div>
+          </div>
+          <h3>3</h3>
+          <p>Lahan aktif</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span>Pekerjaan</span>
+            <div class="stat-icon">📋</div>
+          </div>
+          <h3>4</h3>
+          <p>Aktivitas berjalan</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span>Hasil Panen</span>
+            <div class="stat-icon">🌾</div>
+          </div>
+          <h3>2,8 T</h3>
+          <p>Bulan ini</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span>Pendapatan</span>
+            <div class="stat-icon">💰</div>
+          </div>
+          <h3>Rp8,4 jt</h3>
+          <p>Bulan ini</p>
+        </div>
+
+      </div>
+
+
+      <div class="card" style="margin-bottom:20px;">
+
+        <div class="card-header">
+          <h3>Akses Cepat</h3>
+        </div>
+
+        <div class="quick-grid">
+
+          <button class="quick-btn" onclick="openModal('modalLahan')">
+            <div>🌱</div>
+            <span>Tambah Lahan</span>
+          </button>
+
+          <button class="quick-btn" onclick="openModal('modalPekerjaan')">
+            <div>📋</div>
+            <span>Buat Pekerjaan</span>
+          </button>
+
+          <button class="quick-btn" onclick="openModal('modalPanen')">
+            <div>🌾</div>
+            <span>Catat Panen</span>
+          </button>
+
+          <button class="quick-btn" onclick="showPage('transaksi')">
+            <div>💰</div>
+            <span>Transaksi</span>
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="content-grid">
+
+        <div class="card">
+
+          <div class="card-header">
+            <h3>Aktivitas Terbaru</h3>
+            <button class="link-button" onclick="showPage('transaksi')">
+              Lihat semua
+            </button>
+          </div>
+
+          <div class="list">
+
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-icon">🌾</div>
+                <div>
+                  <strong>Panen Sawit selesai</strong>
+                  <small>Kebun Makmur • 850 kg</small>
+                </div>
+              </div>
+              <span class="badge success">Selesai</span>
+            </div>
+
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-icon">🧑‍🌾</div>
+                <div>
+                  <strong>Andi menerima pekerjaan</strong>
+                  <small>Panen Sawit • 25 September</small>
+                </div>
+              </div>
+              <span class="badge info">Aktif</span>
+            </div>
+
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-icon">💰</div>
+                <div>
+                  <strong>Pembayaran diterima</strong>
+                  <small>Panen Kebun Makmur</small>
+                </div>
+              </div>
+              <span class="badge success">Rp2,4 jt</span>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-header">
+            <h3>Notifikasi</h3>
+            <button class="link-button" onclick="showPage('notifikasi')">
+              Semua
+            </button>
+          </div>
+
+          <div class="list">
+
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-icon">🔔</div>
+                <div>
+                  <strong>Pekerjaan diterima</strong>
+                  <small>5 menit lalu</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-icon">📍</div>
+                <div>
+                  <strong>Mitra berada di sekitar</strong>
+                  <small>3,2 km dari Kebun Makmur</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="list-item">
+              <div class="list-main">
+                <div class="list-icon">⭐</div>
+                <div>
+                  <strong>Berikan rating</strong>
+                  <small>Pekerjaan selesai</small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         LAHAN
+    ================================================= -->
+
+    <section class="page" id="page-lahan">
+
+      <div class="section-header">
+        <div>
+          <h2>Lahan Saya</h2>
+          <p>Kelola seluruh lahan pertanian Anda.</p>
+        </div>
+
+        <button class="btn btn-primary" onclick="openModal('modalLahan')">
+          + Tambah Lahan
+        </button>
+      </div>
+
+
+      <div class="farm-grid">
+
+        <div class="farm-card">
+
+          <div class="farm-photo">🌴</div>
+
+          <div class="farm-content">
+            <h3>Kebun Makmur</h3>
+            <div class="farm-location">📍 Lampung Selatan</div>
+
+            <div class="farm-info">
+              <div>
+                <small>Komoditas</small>
+                <strong>Sawit</strong>
+              </div>
+              <div>
+                <small>Luas</small>
+                <strong>4,2 ha</strong>
+              </div>
+              <div>
+                <small>Status</small>
+                <strong>Aktif</strong>
+              </div>
+              <div>
+                <small>Panen</small>
+                <strong>850 kg</strong>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="farm-card">
+
+          <div class="farm-photo">🌾</div>
+
+          <div class="farm-content">
+            <h3>Sawah Harapan</h3>
+            <div class="farm-location">📍 Lampung Selatan</div>
+
+            <div class="farm-info">
+              <div>
+                <small>Komoditas</small>
+                <strong>Padi</strong>
+              </div>
+              <div>
+                <small>Luas</small>
+                <strong>1,5 ha</strong>
+              </div>
+              <div>
+                <small>Status</small>
+                <strong>Aktif</strong>
+              </div>
+              <div>
+                <small>Musim</small>
+                <strong>MT II</strong>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="farm-card">
+
+          <div class="farm-photo">🌽</div>
+
+          <div class="farm-content">
+            <h3>Lahan Sejahtera</h3>
+            <div class="farm-location">📍 Bandar Lampung</div>
+
+            <div class="farm-info">
+              <div>
+                <small>Komoditas</small>
+                <strong>Jagung</strong>
+              </div>
+              <div>
+                <small>Luas</small>
+                <strong>2 ha</strong>
+              </div>
+              <div>
+                <small>Status</small>
+                <strong>Aktif</strong>
+              </div>
+              <div>
+                <small>Panen</small>
+                <strong>650 kg</strong>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         PEKERJAAN PENGGUNA
+    ================================================= -->
+
+    <section class="page" id="page-pekerjaan">
+
+      <div class="section-header">
+
+        <div>
+          <h2>Pekerjaan</h2>
+          <p>Kelola pekerjaan pertanian Anda.</p>
+        </div>
+
+        <button class="btn btn-primary" onclick="openModal('modalPekerjaan')">
+          + Buat Pekerjaan
+        </button>
+
+      </div>
+
+
+      <div class="job-grid">
+
+        <div class="job-card">
+
+          <div class="job-top">
+
+            <div class="job-title">
+              <div class="job-icon">🌴</div>
+              <div>
+                <h3>Panen Sawit</h3>
+                <p>Kebun Makmur</p>
+              </div>
+            </div>
+
+            <span class="badge warning">Mencari Mitra</span>
+
+          </div>
+
+          <div class="job-details">
+
+            <div class="job-detail">
+              <span>📅 Tanggal</span>
+              25 September 2026
+            </div>
+
+            <div class="job-detail">
+              <span>👥 Pekerja</span>
+              3 orang
+            </div>
+
+            <div class="job-detail">
+              <span>📍 Lokasi</span>
+              Lampung Selatan
+            </div>
+
+            <div class="job-detail">
+              <span>📏 Luas</span>
+              2 ha
+            </div>
+
+          </div>
+
+          <div class="job-bottom">
+            <span class="salary">Rp750.000/hari</span>
+            <button class="btn btn-outline" onclick="showToast('Detail pekerjaan dibuka')">
+              Detail
+            </button>
+          </div>
+
+        </div>
+
+
+        <div class="job-card">
+
+          <div class="job-top">
+
+            <div class="job-title">
+              <div class="job-icon">🌾</div>
+              <div>
+                <h3>Penyiangan Padi</h3>
+                <p>Sawah Harapan</p>
+              </div>
+            </div>
+
+            <span class="badge info">Berjalan</span>
+
+          </div>
+
+          <div class="job-details">
+
+            <div class="job-detail">
+              <span>📅 Tanggal</span>
+              24 September 2026
+            </div>
+
+            <div class="job-detail">
+              <span>👥 Pekerja</span>
+              4 orang
+            </div>
+
+            <div class="job-detail">
+              <span>📍 Lokasi</span>
+              Lampung Selatan
+            </div>
+
+            <div class="job-detail">
+              <span>📏 Luas</span>
+              1,5 ha
+            </div>
+
+          </div>
+
+          <div class="job-bottom">
+            <span class="salary">Rp120.000/hari</span>
+            <button class="btn btn-outline">
+              Detail
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         HASIL PANEN
+    ================================================= -->
+
+    <section class="page" id="page-panen">
+
+      <div class="section-header">
+
+        <div>
+          <h2>Hasil Panen</h2>
+          <p>Riwayat dan pencatatan hasil pertanian.</p>
+        </div>
+
+        <button class="btn btn-primary" onclick="openModal('modalPanen')">
+          + Catat Panen
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>Lahan</th>
+                <th>Komoditas</th>
+                <th>Jumlah</th>
+                <th>Pembeli</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr>
+                <td>23 Sep 2026</td>
+                <td>Kebun Makmur</td>
+                <td>🌴 Sawit</td>
+                <td>850 kg</td>
+                <td>CV Makmur Jaya</td>
+                <td><span class="badge success">Terjual</span></td>
+              </tr>
+
+              <tr>
+                <td>17 Sep 2026</td>
+                <td>Lahan Sejahtera</td>
+                <td>🌽 Jagung</td>
+                <td>650 kg</td>
+                <td>UD Tani Jaya</td>
+                <td><span class="badge success">Terjual</span></td>
+              </tr>
+
+              <tr>
+                <td>10 Sep 2026</td>
+                <td>Kebun Makmur</td>
+                <td>🌴 Sawit</td>
+                <td>1.320 kg</td>
+                <td>CV Makmur Jaya</td>
+                <td><span class="badge warning">Menunggu</span></td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         MARKETPLACE
+    ================================================= -->
+    <section class="page" id="page-marketplace">
+      <div class="section-header">
+        <div><h2>Marketplace</h2><p>Produk dan jasa yang dibutuhkan dalam kegiatan pertanian.</p></div>
+        <button class="btn btn-primary cart-pill" onclick="openCart()">🛒 Keranjang <span class="cart-count" id="cartCount">2</span></button>
+      </div>
+
+      <div class="store-banner">
+        <div><h3>🌱 Belanja & Jual di PETANI</h3><p>Petani, mitra, pemilik lahan, dan penyedia jasa dapat menjadi pembeli sekaligus penjual.</p></div>
+        <div class="store-actions"><button class="btn" style="background:white;color:var(--primary)" onclick="showPage('toko')">🏪 Toko Saya</button><button class="btn" style="background:rgba(255,255,255,.16);color:white;border:1px solid rgba(255,255,255,.4)" onclick="openModal('modalToko')">+ Buka Toko</button></div>
+      </div>
+
+      <div class="market-toolbar">
+        <div class="market-search"><span>🔎</span><input id="marketSearch" placeholder="Cari bibit, pupuk, alat, atau jasa..." oninput="filterMarketplace()"></div>
+        <button class="btn btn-outline" onclick="showToast('Filter marketplace dibuka')">☰ Filter</button>
+      </div>
+
+      <div class="category-grid">
+        <button class="category-btn" onclick="filterCategory('all')"><div>🌱</div>Semua</button>
+        <button class="category-btn" onclick="filterCategory('bibit')"><div>🌿</div>Bibit</button>
+        <button class="category-btn" onclick="filterCategory('pupuk')"><div>🧪</div>Pupuk</button>
+        <button class="category-btn" onclick="filterCategory('alat')"><div>🚜</div>Alat Tani</button>
+        <button class="category-btn" onclick="filterCategory('produk')"><div>🌾</div>Hasil Tani</button>
+        <button class="category-btn" onclick="filterCategory('jasa')"><div>🧑‍🌾</div>Jasa</button>
+      </div>
+
+      <div class="market-tabs">
+        <button class="market-tab active" id="tabProduk" onclick="marketTab('produk')">🛍️ Produk</button>
+        <button class="market-tab" id="tabJasa" onclick="marketTab('jasa')">🧑‍🌾 Jasa Pertanian</button>
+      </div>
+
+      <div id="marketProduk">
+        <div class="product-grid" id="productGrid">
+          <div class="product-card" data-category="bibit" data-search="bibit sawit unggul tani jaya">
+            <div class="product-photo"><span class="promo-tag">PROMO</span>🌱</div><div class="product-body"><h3>Bibit Sawit Unggul</h3><p>Benih siap tanam untuk kebun produktif.</p><div class="product-price">Rp85.000</div><div class="product-meta">per bibit • Toko Tani Jaya</div><div class="product-actions"><button class="btn btn-outline" onclick="showToast('Detail produk dibuka')">Detail</button><button class="btn btn-primary" onclick="addToCart('Bibit Sawit Unggul',85000,'🌱')">+ Keranjang</button></div></div>
+          </div>
+          <div class="product-card" data-category="pupuk" data-search="pupuk organik subur makmur pupuk">
+            <div class="product-photo">🧪</div><div class="product-body"><h3>Pupuk Organik Premium</h3><p>Pupuk organik untuk membantu menjaga kesuburan tanah.</p><div class="product-price">Rp125.000</div><div class="product-meta">25 kg • Toko Subur Makmur</div><div class="product-actions"><button class="btn btn-outline" onclick="showToast('Detail produk dibuka')">Detail</button><button class="btn btn-primary" onclick="addToCart('Pupuk Organik Premium',125000,'🧪')">+ Keranjang</button></div></div>
+          </div>
+          <div class="product-card" data-category="alat" data-search="sprayer alat tani semprot">
+            <div class="product-photo">🚜</div><div class="product-body"><h3>Sprayer Elektrik</h3><p>Peralatan semprot untuk kebutuhan perawatan tanaman.</p><div class="product-price">Rp780.000</div><div class="product-meta">1 unit • Toko Alat Tani</div><div class="product-actions"><button class="btn btn-outline" onclick="showToast('Detail produk dibuka')">Detail</button><button class="btn btn-primary" onclick="addToCart('Sprayer Elektrik',780000,'🚜')">+ Keranjang</button></div></div>
+          </div>
+          <div class="product-card" data-category="produk" data-search="beras premium hasil tani beras">
+            <div class="product-photo"><span class="promo-tag">BARU</span>🌾</div><div class="product-body"><h3>Beras Premium Petani</h3><p>Hasil panen langsung dari jaringan petani PETANI.</p><div class="product-price">Rp175.000</div><div class="product-meta">5 kg • Sawah Harapan</div><div class="product-actions"><button class="btn btn-outline" onclick="showToast('Detail produk dibuka')">Detail</button><button class="btn btn-primary" onclick="addToCart('Beras Premium Petani',175000,'🌾')">+ Keranjang</button></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="marketJasa" style="display:none">
+        <div class="service-grid">
+          <div class="service-card"><div class="service-top"><div class="service-icon">🪓</div><div><h3>Jasa Panen Sawit</h3><p>Tim pemanen berpengalaman untuk pekerjaan panen.</p></div></div><div class="service-info"><div><span>📍 Lokasi</span>Lampung Selatan</div><div><span>⭐ Rating</span>4,9 / 5</div><div><span>👥 Tim</span>4 orang</div><div><span>📏 Kapasitas</span>3 ha/hari</div></div><div class="service-bottom"><strong class="salary">Rp750.000/hari</strong><button class="btn btn-primary" onclick="showToast('Permintaan jasa dikirim')">Pesan Jasa</button></div></div>
+          <div class="service-card"><div class="service-top"><div class="service-icon">🚜</div><div><h3>Jasa Traktor</h3><p>Pengolahan tanah dan persiapan lahan pertanian.</p></div></div><div class="service-info"><div><span>📍 Lokasi</span>Bandar Lampung</div><div><span>⭐ Rating</span>4,8 / 5</div><div><span>🚜 Alat</span>Traktor roda 4</div><div><span>📅 Ketersediaan</span>Siap pesan</div></div><div class="service-bottom"><strong class="salary">Mulai Rp450.000</strong><button class="btn btn-primary" onclick="showToast('Permintaan jasa dikirim')">Pesan Jasa</button></div></div>
+          <div class="service-card"><div class="service-top"><div class="service-icon">🚚</div><div><h3>Jasa Angkut Hasil Panen</h3><p>Pengangkutan hasil panen dari lahan ke pembeli.</p></div></div><div class="service-info"><div><span>📍 Area</span>Lampung & sekitar</div><div><span>⭐ Rating</span>4,7 / 5</div><div><span>🚚 Armada</span>Pickup</div><div><span>📦 Kapasitas</span>1,5 ton</div></div><div class="service-bottom"><strong class="salary">Mulai Rp200.000</strong><button class="btn btn-primary" onclick="showToast('Permintaan jasa dikirim')">Pesan Jasa</button></div></div>
+          <div class="service-card"><div class="service-top"><div class="service-icon">🧑‍🌾</div><div><h3>Tenaga Kerja Tani</h3><p>Pekerja untuk tanam, pemupukan, penyiangan, dan pekerjaan lain.</p></div></div><div class="service-info"><div><span>📍 Lokasi</span>Lampung Selatan</div><div><span>⭐ Rating</span>4,9 / 5</div><div><span>👥 Tenaga</span>6 orang</div><div><span>🛠️ Keahlian</span>Multipekerjaan</div></div><div class="service-bottom"><strong class="salary">Mulai Rp120.000/hari</strong><button class="btn btn-primary" onclick="showToast('Permintaan tenaga dikirim')">Pesan</button></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================
+         TOKO SAYA
+    ================================================= -->
+    <section class="page" id="page-toko">
+      <div class="section-header"><div><h2>Toko Saya</h2><p>Kelola produk atau jasa yang Anda tawarkan di PETANI.</p></div><button class="btn btn-primary" onclick="openModal('modalProduk')">+ Tambah Produk</button></div>
+      <div class="store-banner"><div><h3>🏪 Toko Tani Andi</h3><p>Toko Anda dapat menjual produk pertanian sekaligus menawarkan jasa.</p></div><div class="store-actions"><button class="btn" style="background:white;color:var(--primary)" onclick="openModal('modalProduk')">+ Produk</button><button class="btn" style="background:rgba(255,255,255,.16);color:white;border:1px solid rgba(255,255,255,.4)" onclick="openModal('modalJasa')">+ Jasa</button></div></div>
+      <div class="stats-grid"><div class="stat-card"><div class="stat-top"><span>Produk Aktif</span><div class="stat-icon">📦</div></div><h3>6</h3><p>Produk dijual</p></div><div class="stat-card"><div class="stat-top"><span>Pesanan</span><div class="stat-icon">🛒</div></div><h3>12</h3><p>Bulan ini</p></div><div class="stat-card"><div class="stat-top"><span>Pendapatan</span><div class="stat-icon">💰</div></div><h3>Rp3,8 jt</h3><p>Bulan ini</p></div><div class="stat-card"><div class="stat-top"><span>Rating</span><div class="stat-icon">⭐</div></div><h3>4,9</h3><p>Dari pembeli</p></div></div>
+      <div class="shop-grid"><div class="shop-card"><div class="shop-head"><div class="shop-logo">🌱</div><div><h3>Bibit & Tanaman</h3><p>4 produk aktif</p></div></div><div class="shop-stats"><div><strong>18</strong><small>Terjual</small></div><div><strong>4,9</strong><small>Rating</small></div><div><strong>Rp1,7 jt</strong><small>Omzet</small></div></div><br><button class="btn btn-outline" onclick="showToast('Daftar produk dibuka')">Kelola Produk</button></div><div class="shop-card"><div class="shop-head"><div class="shop-logo">🧑‍🌾</div><div><h3>Jasa Pertanian</h3><p>2 jasa aktif</p></div></div><div class="shop-stats"><div><strong>7</strong><small>Pesanan</small></div><div><strong>5,0</strong><small>Rating</small></div><div><strong>Rp2,1 jt</strong><small>Pendapatan</small></div></div><br><button class="btn btn-outline" onclick="openModal('modalJasa')">Kelola Jasa</button></div><div class="shop-card"><div class="shop-head"><div class="shop-logo">📢</div><div><h3>Promosi</h3><p>Jangkau pembeli sekitar</p></div></div><div class="shop-stats"><div><strong>1.240</strong><small>Dilihat</small></div><div><strong>86</strong><small>Klik</small></div><div><strong>6,9%</strong><small>Respons</small></div></div><br><button class="btn btn-primary" onclick="showToast('Fitur promosi akan dibuka')">Buat Promosi</button></div></div>
+    </section>
+
+    <!-- =================================================
+         TRANSAKSI
+    ================================================= -->
+
+    <section class="page" id="page-transaksi">
+
+      <div class="section-header">
+
+        <div>
+          <h2>Transaksi</h2>
+          <p>Riwayat transaksi dan pembayaran.</p>
+        </div>
+
+      </div>
+
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span>Pendapatan</span>
+            <div class="stat-icon">💰</div>
+          </div>
+          <h3>Rp8,4 jt</h3>
+          <p>Bulan berjalan</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span>Pengeluaran</span>
+            <div class="stat-icon">💸</div>
+          </div>
+          <h3>Rp2,1 jt</h3>
+          <p>Bulan berjalan</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span>Menunggu</span>
+            <div class="stat-icon">⏳</div>
+          </div>
+          <h3>Rp750 rb</h3>
+          <p>Transaksi</p>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span>Selesai</span>
+            <div class="stat-icon">✓</div>
+          </div>
+          <h3>18</h3>
+          <p>Transaksi</p>
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tanggal</th>
+                <th>Jenis</th>
+                <th>Keterangan</th>
+                <th>Nominal</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr>
+                <td>#TRX-1028</td>
+                <td>23 Sep 2026</td>
+                <td>Hasil Panen</td>
+                <td>Penjualan TBS</td>
+                <td>Rp2.400.000</td>
+                <td><span class="badge success">Selesai</span></td>
+              </tr>
+
+              <tr>
+                <td>#TRX-1027</td>
+                <td>22 Sep 2026</td>
+                <td>Jasa</td>
+                <td>Panen Sawit</td>
+                <td>Rp750.000</td>
+                <td><span class="badge warning">Menunggu</span></td>
+              </tr>
+
+              <tr>
+                <td>#TRX-1026</td>
+                <td>20 Sep 2026</td>
+                <td>Sarana</td>
+                <td>Pupuk</td>
+                <td>Rp1.200.000</td>
+                <td><span class="badge success">Selesai</span></td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         NOTIFIKASI
+    ================================================= -->
+
+    <section class="page" id="page-notifikasi">
+
+      <div class="section-header">
+
+        <div>
+          <h2>Notifikasi</h2>
+          <p>Informasi terbaru dari aktivitas PETANI.</p>
+        </div>
+
+        <button class="btn btn-outline" onclick="showToast('Semua notifikasi ditandai sudah dibaca')">
+          Tandai Dibaca
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="list">
+
+          <div class="list-item">
+            <div class="list-main">
+              <div class="list-icon">📋</div>
+              <div>
+                <strong>Andi menerima pekerjaan Panen Sawit</strong>
+                <small>5 menit yang lalu • Kebun Makmur</small>
+              </div>
+            </div>
+            <span class="badge info">Baru</span>
+          </div>
+
+          <div class="list-item">
+            <div class="list-main">
+              <div class="list-icon">📍</div>
+              <div>
+                <strong>Mitra tersedia di sekitar lokasi</strong>
+                <small>3,2 km dari Kebun Makmur</small>
+              </div>
+            </div>
+            <span class="badge success">Info</span>
+          </div>
+
+          <div class="list-item">
+            <div class="list-main">
+              <div class="list-icon">💰</div>
+              <div>
+                <strong>Pembayaran berhasil diterima</strong>
+                <small>Rp2.400.000 • Transaksi #TRX-1028</small>
+              </div>
+            </div>
+            <span class="badge success">Selesai</span>
+          </div>
+
+          <div class="list-item">
+            <div class="list-main">
+              <div class="list-icon">⭐</div>
+              <div>
+                <strong>Berikan rating kepada mitra</strong>
+                <small>Pekerjaan Panen Sawit telah selesai</small>
+              </div>
+            </div>
+            <button class="btn btn-outline" onclick="showToast('Fitur rating akan dibuka')">
+              Rating
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         PROFIL
+    ================================================= -->
+
+    <section class="page" id="page-profil">
+
+      <div class="section-header">
+        <div>
+          <h2>Profil</h2>
+          <p>Kelola informasi akun PETANI.</p>
+        </div>
+      </div>
+
+
+      <div class="card profile-card">
+
+        <div class="profile-head">
+
+          <div class="profile-avatar" id="profileAvatar">
+            AR
+          </div>
+
+          <div>
+            <h2 id="profileName">Andi Rahman</h2>
+            <p id="profileRole">Petani Pengguna</p>
+          </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Nama Lengkap</label>
+            <input id="profileNameInput" value="Andi Rahman">
+          </div>
+
+          <div class="form-group">
+            <label>Nomor Telepon</label>
+            <input value="08xx-xxxx-xxxx">
+          </div>
+
+          <div class="form-group">
+            <label>Provinsi</label>
+            <select>
+              <option>Lampung</option>
+              <option>Sumatera Selatan</option>
+              <option>Jawa Barat</option>
+              <option>Jawa Tengah</option>
+              <option>Jawa Timur</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Kecamatan</label>
+            <input value="Kecamatan Contoh">
+          </div>
+
+          <div class="form-group full">
+            <label>Alamat</label>
+            <textarea>Alamat pengguna PETANI</textarea>
+          </div>
+
+        </div>
+
+        <br>
+
+        <button class="btn btn-primary" onclick="saveProfile()">
+          Simpan Profil
+        </button>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <!-- MOBILE NAV -->
+
+  <nav class="mobile-nav">
+
+    <div class="mobile-nav-grid">
+
+      <button class="active" onclick="mobileNav('dashboard', this)">
+        <div>🏠</div>
+        Beranda
+      </button>
+
+      <button onclick="mobileNav('lahan', this)">
+        <div>🌱</div>
+        Lahan
+      </button>
+
+      <button onclick="mobileNav('pekerjaan', this)">
+        <div>📋</div>
+        Kerja
+      </button>
+
+      <button onclick="mobileNav('marketplace', this)">
+        <div>🛒</div>
+        Pasar
+      </button>
+
+      <button onclick="mobileNav('profil', this)">
+        <div>👤</div>
+        Profil
+      </button>
+
+    </div>
+
+  </nav>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL TAMBAH LAHAN
+===================================================== -->
+
+<div class="modal-overlay" id="modalLahan">
+
+  <div class="modal">
+
+    <div class="modal-header">
+      <div>
+        <h3>Tambah Lahan</h3>
+        <p style="font-size:11px;color:#6b7280;margin-top:3px;">
+          Tambahkan data lahan pertanian.
+        </p>
+      </div>
+
+      <button class="close-modal" onclick="closeModal('modalLahan')">
+        ✕
+      </button>
+    </div>
+
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Nama Lahan</label>
+        <input id="farmName" placeholder="Contoh: Kebun Sejahtera">
+      </div>
+
+      <div class="form-group">
+        <label>Komoditas</label>
+        <select id="farmCommodity">
+          <option>Sawit</option>
+          <option>Padi</option>
+          <option>Jagung</option>
+          <option>Kopi</option>
+          <option>Kakao</option>
+          <option>Karet</option>
+          <option>Sayuran</option>
+          <option>Buah-buahan</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Luas Lahan</label>
+        <input type="number" placeholder="Contoh: 2.5">
+      </div>
+
+      <div class="form-group">
+        <label>Satuan</label>
+        <select>
+          <option>Hektare (ha)</option>
+          <option>Meter persegi</option>
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <label>Lokasi</label>
+        <input placeholder="Alamat/lokasi lahan">
+      </div>
+
+      <div class="form-group full">
+        <label>Foto Lahan</label>
+        <input type="file" accept="image/*">
+      </div>
+
+    </div>
+
+    <br>
+
+    <button class="btn btn-primary" onclick="addFarm()">
+      Simpan Lahan
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL PEKERJAAN
+===================================================== -->
+
+<div class="modal-overlay" id="modalPekerjaan">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <div>
+        <h3>Buat Pekerjaan</h3>
+        <p style="font-size:11px;color:#6b7280;margin-top:3px;">
+          Publikasikan kebutuhan tenaga atau jasa pertanian.
+        </p>
+      </div>
+
+      <button class="close-modal" onclick="closeModal('modalPekerjaan')">
+        ✕
+      </button>
+
+    </div>
+
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Jenis Komoditas</label>
+        <select>
+          <option>Sawit</option>
+          <option>Padi</option>
+          <option>Jagung</option>
+          <option>Kopi</option>
+          <option>Kakao</option>
+          <option>Karet</option>
+          <option>Sayuran</option>
+          <option>Buah-buahan</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Jenis Pekerjaan</label>
+        <select>
+          <option>Panen</option>
+          <option>Tanam</option>
+          <option>Pemupukan</option>
+          <option>Penyemprotan</option>
+          <option>Penyiangan</option>
+          <option>Pemangkasan</option>
+          <option>Pengolahan Tanah</option>
+          <option>Pengangkutan</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Tanggal Mulai</label>
+        <input type="date">
+      </div>
+
+      <div class="form-group">
+        <label>Durasi</label>
+        <input placeholder="Contoh: 2 hari">
+      </div>
+
+      <div class="form-group">
+        <label>Jumlah Pekerja</label>
+        <input type="number" min="1" placeholder="Contoh: 3">
+      </div>
+
+      <div class="form-group">
+        <label>Upah</label>
+        <input placeholder="Rp per hari/orang">
+      </div>
+
+      <div class="form-group full">
+        <label>Lokasi Pekerjaan</label>
+        <input placeholder="Lokasi pekerjaan">
+      </div>
+
+      <div class="form-group full">
+        <label>Keterangan</label>
+        <textarea placeholder="Jelaskan pekerjaan yang dibutuhkan..."></textarea>
+      </div>
+
+    </div>
+
+    <br>
+
+    <button class="btn btn-primary" onclick="createJob()">
+      Publikasikan Pekerjaan
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     MODAL PANEN
+===================================================== -->
+
+<div class="modal-overlay" id="modalPanen">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <div>
+        <h3>Catat Hasil Panen</h3>
+        <p style="font-size:11px;color:#6b7280;margin-top:3px;">
+          Simpan hasil panen ke riwayat pertanian.
+        </p>
+      </div>
+
+      <button class="close-modal" onclick="closeModal('modalPanen')">
+        ✕
+      </button>
+
+    </div>
+
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Lahan</label>
+        <select>
+          <option>Kebun Makmur</option>
+          <option>Sawah Harapan</option>
+          <option>Lahan Sejahtera</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Komoditas</label>
+        <select>
+          <option>Sawit</option>
+          <option>Padi</option>
+          <option>Jagung</option>
+          <option>Kopi</option>
+          <option>Kakao</option>
+          <option>Lainnya</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Tanggal Panen</label>
+        <input type="date">
+      </div>
+
+      <div class="form-group">
+        <label>Jumlah Hasil</label>
+        <input type="number" placeholder="Contoh: 850">
+      </div>
+
+      <div class="form-group">
+        <label>Satuan</label>
+        <select>
+          <option>kg</option>
+          <option>ton</option>
+          <option>ikat</option>
+          <option>karung</option>
+          <option>buah</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Harga</label>
+        <input placeholder="Harga total">
+      </div>
+
+      <div class="form-group full">
+        <label>Pembeli</label>
+        <input placeholder="Nama pembeli/pengepul">
+      </div>
+
+      <div class="form-group full">
+        <label>Foto Hasil Panen</label>
+        <input type="file" accept="image/*">
+      </div>
+
+    </div>
+
+    <br>
+
+    <button class="btn btn-primary" onclick="saveHarvest()">
+      Simpan Hasil Panen
+    </button>
+
+  </div>
+
+</div>
+
+
+
+
+<!-- =====================================================
+     MODAL BUKA TOKO
+===================================================== -->
+<div class="modal-overlay" id="modalToko"><div class="modal"><div class="modal-header"><div><h3>Buka Toko</h3><p style="font-size:11px;color:#6b7280;margin-top:3px;">Jadikan akun Anda sebagai penjual produk atau penyedia jasa.</p></div><button class="close-modal" onclick="closeModal('modalToko')">✕</button></div><div class="form-grid"><div class="form-group full"><label>Nama Toko</label><input id="storeName" placeholder="Contoh: Toko Tani Sejahtera"></div><div class="form-group"><label>Jenis Toko</label><select><option>Produk Pertanian</option><option>Jasa Pertanian</option><option>Produk & Jasa</option></select></div><div class="form-group"><label>Lokasi</label><input placeholder="Kecamatan / Kabupaten"></div><div class="form-group full"><label>Deskripsi Toko</label><textarea placeholder="Jelaskan produk atau jasa yang ditawarkan..."></textarea></div></div><br><button class="btn btn-primary" onclick="createStore()">Buka Toko</button></div></div>
+
+<!-- MODAL PRODUK -->
+<div class="modal-overlay" id="modalProduk"><div class="modal"><div class="modal-header"><div><h3>Tambah Produk</h3><p style="font-size:11px;color:#6b7280;margin-top:3px;">Tambahkan barang yang ingin dijual.</p></div><button class="close-modal" onclick="closeModal('modalProduk')">✕</button></div><div class="form-grid"><div class="form-group full"><label>Nama Produk</label><input id="newProductName" placeholder="Contoh: Pupuk Organik"></div><div class="form-group"><label>Kategori</label><select><option>Bibit</option><option>Pupuk</option><option>Alat Tani</option><option>Hasil Tani</option><option>Lainnya</option></select></div><div class="form-group"><label>Harga</label><input type="number" placeholder="Harga jual"></div><div class="form-group"><label>Stok</label><input type="number" placeholder="Jumlah stok"></div><div class="form-group"><label>Satuan</label><input placeholder="kg / unit / bibit"></div><div class="form-group full"><label>Deskripsi</label><textarea placeholder="Deskripsi produk..."></textarea></div><div class="form-group full"><label>Foto Produk</label><input type="file" accept="image/*"></div></div><br><button class="btn btn-primary" onclick="saveProduct()">Publikasikan Produk</button></div></div>
+
+<!-- MODAL JASA -->
+<div class="modal-overlay" id="modalJasa"><div class="modal"><div class="modal-header"><div><h3>Tambah Jasa</h3><p style="font-size:11px;color:#6b7280;margin-top:3px;">Tawarkan kemampuan atau peralatan pertanian Anda.</p></div><button class="close-modal" onclick="closeModal('modalJasa')">✕</button></div><div class="form-grid"><div class="form-group full"><label>Nama Jasa</label><input placeholder="Contoh: Jasa Panen Sawit"></div><div class="form-group"><label>Kategori</label><select><option>Panen</option><option>Tenaga Kerja</option><option>Traktor / Alat</option><option>Pengangkutan</option><option>Pemupukan</option><option>Lainnya</option></select></div><div class="form-group"><label>Tarif</label><input placeholder="Contoh: Rp750.000/hari"></div><div class="form-group full"><label>Area Layanan</label><input placeholder="Kecamatan / Kabupaten / Provinsi"></div><div class="form-group full"><label>Deskripsi</label><textarea placeholder="Jelaskan jasa, kapasitas, pengalaman, atau peralatan yang tersedia..."></textarea></div></div><br><button class="btn btn-primary" onclick="saveService()">Publikasikan Jasa</button></div></div>
+
+<!-- MODAL KERANJANG -->
+<div class="modal-overlay" id="modalCart"><div class="modal"><div class="modal-header"><div><h3>Keranjang</h3><p style="font-size:11px;color:#6b7280;margin-top:3px;">Produk yang siap Anda pesan.</p></div><button class="close-modal" onclick="closeModal('modalCart')">✕</button></div><div class="cart-list" id="cartList"></div><div class="cart-total"><span>Total</span><span id="cartTotal">Rp0</span></div><br><button class="btn btn-primary" style="width:100%" onclick="checkoutCart()">Lanjutkan Pesanan</button></div></div>
+
+<!-- TOAST -->
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+  /* =====================================================
+     DATA DEMO
+  ===================================================== */
+
+  let currentRole = localStorage.getItem("petaniRole") || null;
+
+  const userData = {
+    pengguna: {
+      name: "Andi Rahman",
+      initials: "AR",
+      role: "Petani Pengguna"
+    },
+    mitra: {
+      name: "Budi Santoso",
+      initials: "BS",
+      role: "Petani Mitra"
+    }
+  };
+
+
+  /* =====================================================
+     LOGIN
+  ===================================================== */
+
+  function loginAs(role) {
+
+    currentRole = role;
+
+    localStorage.setItem("petaniRole", role);
+
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+
+    updateUserInterface();
+
+    if (role === "mitra") {
+      activateMitraMode();
+    }
+
+  }
+
+
+  function updateUserInterface() {
+
+    const user = userData[currentRole];
+
+    document.getElementById("topName").textContent = user.name;
+    document.getElementById("topAvatar").textContent = user.initials;
+
+    document.getElementById("profileName").textContent = user.name;
+    document.getElementById("profileRole").textContent = user.role;
+    document.getElementById("profileAvatar").textContent = user.initials;
+
+    document.getElementById("profileNameInput").value = user.name;
+
+    document.getElementById("welcomeTitle").textContent =
+      `Selamat datang, ${user.name.split(" ")[0]}! 👋`;
+
+    if (currentRole === "mitra") {
+
+      document.getElementById("welcomeText").textContent =
+        "Temukan pekerjaan pertanian di sekitar Anda, kelola pekerjaan aktif, dan pantau pendapatan.";
+
+    }
+
+  }
+
+
+  /* =====================================================
+     MITRA MODE
+  ===================================================== */
+
+  function activateMitraMode() {
+
+    document.querySelector('[data-page="lahan"]').style.display = "none";
+
+    document.querySelector('[data-page="pekerjaan"]').innerHTML =
+      '<span class="nav-icon">📋</span> Pekerjaan Tersedia';
+
+    document.querySelector('[data-page="panen"]').innerHTML =
+      '<span class="nav-icon">💼</span> Pekerjaan Saya';
+
+    document.querySelector('[data-page="transaksi"]').innerHTML =
+      '<span class="nav-icon">💰</span> Pendapatan';
+
+    document.getElementById("page-pekerjaan").querySelector("p").textContent =
+      "Temukan pekerjaan pertanian di sekitar Anda.";
+
+    const headerButton =
+      document.getElementById("page-pekerjaan").querySelector(".btn");
+
+    headerButton.textContent = "📍 Cari Pekerjaan";
+
+    headerButton.onclick = function() {
+      showToast("Mencari pekerjaan di sekitar lokasi Anda...");
+    };
+
+    document.getElementById("page-panen").querySelector("h2").textContent =
+      "Pekerjaan Saya";
+
+    document.getElementById("page-panen").querySelector("p").textContent =
+      "Pekerjaan yang sedang dan telah Anda selesaikan.";
+
+  }
+
+
+  /* =====================================================
+     LOGOUT
+  ===================================================== */
+
+  function logout() {
+
+    localStorage.removeItem("petaniRole");
+
+    location.reload();
+
+  }
+
+
+  /* =====================================================
+     NAVIGATION
+  ===================================================== */
+
+  function showPage(page, clickedButton = null) {
+
+    document.querySelectorAll(".page").forEach(p => {
+      p.classList.remove("active");
+    });
+
+    const target = document.getElementById("page-" + page);
+
+    if (target) {
+      target.classList.add("active");
+    }
+
+    document.querySelectorAll(".nav-item").forEach(btn => {
+      btn.classList.remove("active");
+    });
+
+    const navButton =
+      clickedButton ||
+      document.querySelector(`.nav-item[data-page="${page}"]`);
+
+    if (navButton) {
+      navButton.classList.add("active");
+    }
+
+    const titles = {
+      dashboard: ["Dashboard", "Ringkasan aktivitas pertanian Anda"],
+      lahan: ["Lahan Saya", "Kelola seluruh lahan pertanian"],
+      pekerjaan: ["Pekerjaan", "Kelola aktivitas pekerjaan pertanian"],
+      panen: ["Hasil Panen", "Catatan hasil pertanian"],
+      marketplace: ["Marketplace", "Produk dan jasa pertanian"],
+      toko: ["Toko Saya", "Kelola produk dan jasa Anda"],
+      transaksi: ["Transaksi", "Riwayat transaksi dan pembayaran"],
+      notifikasi: ["Notifikasi", "Informasi terbaru dari PETANI"],
+      profil: ["Profil", "Kelola informasi akun"]
+    };
+
+    if (titles[page]) {
+
+      document.getElementById("pageTitle").textContent =
+        titles[page][0];
+
+      document.getElementById("pageSubtitle").textContent =
+        titles[page][1];
+
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+
+  function mobileNav(page, button) {
+
+    showPage(page);
+
+    document.querySelectorAll(".mobile-nav button")
+      .forEach(btn => btn.classList.remove("active"));
+
+    button.classList.add("active");
+
+  }
+
+
+  /* =====================================================
+     MODAL
+  ===================================================== */
+
+  function openModal(id) {
+    document.getElementById(id).classList.add("show");
+  }
+
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove("show");
+  }
+
+
+  document.querySelectorAll(".modal-overlay").forEach(modal => {
+
+    modal.addEventListener("click", function(e) {
+
+      if (e.target === modal) {
+        modal.classList.remove("show");
+      }
+
+    });
+
+  });
+
+
+  /* =====================================================
+     ADD FARM
+  ===================================================== */
+
+  function addFarm() {
+
+    const name = document.getElementById("farmName").value;
+
+    if (!name) {
+      showToast("Nama lahan belum diisi.");
+      return;
+    }
+
+    closeModal("modalLahan");
+
+    document.getElementById("farmName").value = "";
+
+    showToast("Lahan berhasil ditambahkan.");
+
+  }
+
+
+  /* =====================================================
+     CREATE JOB
+  ===================================================== */
+
+  function createJob() {
+
+    closeModal("modalPekerjaan");
+
+    showToast(
+      currentRole === "mitra"
+        ? "Pencarian pekerjaan diperbarui."
+        : "Pekerjaan berhasil dipublikasikan."
+    );
+
+  }
+
+
+  /* =====================================================
+     SAVE HARVEST
+  ===================================================== */
+
+  function saveHarvest() {
+
+    closeModal("modalPanen");
+
+    showToast("Hasil panen berhasil dicatat.");
+
+  }
+
+
+
+
+  /* =====================================================
+     MARKETPLACE
+  ===================================================== */
+  let cart = JSON.parse(localStorage.getItem("petaniCart") || "[]");
+  let marketCategory = "all";
+
+  function marketTab(tab){
+    document.getElementById("marketProduk").style.display = tab === "produk" ? "block" : "none";
+    document.getElementById("marketJasa").style.display = tab === "jasa" ? "block" : "none";
+    document.getElementById("tabProduk").classList.toggle("active", tab === "produk");
+    document.getElementById("tabJasa").classList.toggle("active", tab === "jasa");
+  }
+
+  function filterCategory(category){
+    marketCategory = category;
+    marketTab(category === "jasa" ? "jasa" : "produk");
+    document.querySelectorAll(".product-card").forEach(card => {
+      const match = category === "all" || category === "jasa" || card.dataset.category === category;
+      card.style.display = match ? "block" : "none";
+    });
+  }
+
+  function filterMarketplace(){
+    const q = (document.getElementById("marketSearch").value || "").toLowerCase();
+    document.querySelectorAll(".product-card").forEach(card => {
+      const text = (card.dataset.search || "").toLowerCase();
+      const categoryMatch = marketCategory === "all" || marketCategory === "jasa" || card.dataset.category === marketCategory;
+      card.style.display = categoryMatch && text.includes(q) ? "block" : "none";
+    });
+  }
+
+  function addToCart(name, price, icon){
+    const existing = cart.find(item => item.name === name);
+    if(existing) existing.qty++;
+    else cart.push({name, price, icon, qty:1});
+    localStorage.setItem("petaniCart", JSON.stringify(cart));
+    updateCartCount();
+    showToast(name + " ditambahkan ke keranjang.");
+  }
+
+  function updateCartCount(){
+    const count = cart.reduce((sum,item)=>sum+item.qty,0);
+    const el = document.getElementById("cartCount");
+    if(el) el.textContent = count;
+  }
+
+  function formatRupiah(n){ return "Rp" + Number(n).toLocaleString("id-ID"); }
+
+  function openCart(){
+    renderCart();
+    openModal("modalCart");
+  }
+
+  function renderCart(){
+    const list = document.getElementById("cartList");
+    const totalEl = document.getElementById("cartTotal");
+    if(!cart.length){ list.innerHTML = '<div style="text-align:center;padding:25px;color:#6b7280;font-size:12px">🛒<br><br>Keranjang masih kosong.</div>'; totalEl.textContent="Rp0"; return; }
+    let total=0;
+    list.innerHTML=cart.map((item,i)=>{ total += item.price*item.qty; return `<div class="cart-item"><div class="cart-thumb">${item.icon}</div><div class="cart-item-main"><strong>${item.name}</strong><small>${formatRupiah(item.price)} × ${item.qty}</small></div><button class="btn btn-danger" onclick="removeCart(${i})">Hapus</button></div>`; }).join("");
+    totalEl.textContent=formatRupiah(total);
+  }
+
+  function removeCart(index){ cart.splice(index,1); localStorage.setItem("petaniCart",JSON.stringify(cart)); updateCartCount(); renderCart(); }
+
+  function checkoutCart(){
+    if(!cart.length){ showToast("Keranjang masih kosong."); return; }
+    closeModal("modalCart");
+    showToast("Pesanan dibuat. Lanjutkan ke transaksi untuk pembayaran.");
+  }
+
+  function createStore(){
+    const name=document.getElementById("storeName").value.trim();
+    if(!name){ showToast("Nama toko belum diisi."); return; }
+    closeModal("modalToko");
+    showToast("Toko " + name + " berhasil dibuat.");
+    showPage("toko");
+  }
+
+  function saveProduct(){
+    const name=document.getElementById("newProductName").value.trim();
+    if(!name){ showToast("Nama produk belum diisi."); return; }
+    closeModal("modalProduk");
+    document.getElementById("newProductName").value="";
+    showToast("Produk berhasil dipublikasikan.");
+  }
+
+  function saveService(){ closeModal("modalJasa"); showToast("Jasa berhasil dipublikasikan."); }
+
+
+  /* =====================================================
+     PROFILE
+  ===================================================== */
+
+  function saveProfile() {
+
+    const newName =
+      document.getElementById("profileNameInput").value;
+
+    if (!newName) {
+      showToast("Nama belum diisi.");
+      return;
+    }
+
+    document.getElementById("profileName").textContent = newName;
+    document.getElementById("topName").textContent = newName;
+
+    showToast("Profil berhasil diperbarui.");
+
+  }
+
+
+  /* =====================================================
+     TOAST
+  ===================================================== */
+
+  let toastTimer;
+
+  function showToast(message) {
+
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(() => {
+
+      toast.classList.remove("show");
+
+    }, 2600);
+
+  }
+
+
+  /* =====================================================
+     INITIAL LOAD
+  ===================================================== */
+
+  updateCartCount();
+
+  if (currentRole) {
+
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+
+    updateUserInterface();
+
+    if (currentRole === "mitra") {
+      activateMitraMode();
+    }
+
+  }
+
+</script>
+
+</body>
+</html>
