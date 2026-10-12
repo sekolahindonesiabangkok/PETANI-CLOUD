@@ -58,9 +58,59 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
+      position: relative;
+      overflow: hidden;
       background:
-        linear-gradient(rgba(20,85,51,.88), rgba(20,85,51,.92)),
-        radial-gradient(circle at top right, #8bcf9f, transparent 35%);
+        linear-gradient(-45deg, #0f4a2c, #1f7a4d, #2fa864, #155b38);
+      background-size: 320% 320%;
+      animation: bgShift 16s ease-in-out infinite;
+    }
+
+    @keyframes bgShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .login-decor {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .login-decor .leaf {
+      position: absolute;
+      bottom: -60px;
+      font-size: 26px;
+      opacity: 0;
+      animation: leafFloat linear infinite;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,.15));
+    }
+
+    @keyframes leafFloat {
+      0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+      8%   { opacity: .55; }
+      50%  { transform: translateY(-55vh) translateX(18px) rotate(160deg); }
+      92%  { opacity: .5; }
+      100% { transform: translateY(-110vh) translateX(-14px) rotate(320deg); opacity: 0; }
+    }
+
+    .login-decor .leaf:nth-child(1)  { left: 6%;  font-size: 22px; animation-duration: 13s; animation-delay: 0s;  }
+    .login-decor .leaf:nth-child(2)  { left: 16%; font-size: 30px; animation-duration: 17s; animation-delay: 2s;  }
+    .login-decor .leaf:nth-child(3)  { left: 28%; font-size: 18px; animation-duration: 11s; animation-delay: 4s;  }
+    .login-decor .leaf:nth-child(4)  { left: 40%; font-size: 26px; animation-duration: 19s; animation-delay: 1s;  }
+    .login-decor .leaf:nth-child(5)  { left: 54%; font-size: 20px; animation-duration: 14s; animation-delay: 6s;  }
+    .login-decor .leaf:nth-child(6)  { left: 66%; font-size: 32px; animation-duration: 21s; animation-delay: 3s;  }
+    .login-decor .leaf:nth-child(7)  { left: 78%; font-size: 22px; animation-duration: 15s; animation-delay: 5s;  }
+    .login-decor .leaf:nth-child(8)  { left: 88%; font-size: 28px; animation-duration: 18s; animation-delay: 7s;  }
+    .login-decor .leaf:nth-child(9)  { left: 48%; font-size: 16px; animation-duration: 12s; animation-delay: 8.5s;}
+    .login-decor .leaf:nth-child(10) { left: 94%; font-size: 20px; animation-duration: 16s; animation-delay: 9.5s;}
+
+    @media (prefers-reduced-motion: reduce) {
+      .login-screen { animation: none; }
+      .login-decor .leaf { animation: none; display: none; }
     }
 
     .login-card {
@@ -71,6 +121,14 @@
       padding: 32px 25px;
       box-shadow: 0 20px 60px rgba(0,0,0,.18);
       text-align: center;
+      position: relative;
+      z-index: 1;
+      animation: cardRise .5s ease-out;
+    }
+
+    @keyframes cardRise {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .logo {
@@ -83,6 +141,17 @@
       justify-content: center;
       margin: 0 auto 16px;
       font-size: 38px;
+      animation: logoGrow 3.2s ease-in-out infinite;
+    }
+
+    @keyframes logoGrow {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50%      { transform: scale(1.1) rotate(-4deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .logo { animation: none; }
+      .login-card { animation: none; }
     }
 
     .login-card h1 {
@@ -135,6 +204,97 @@
       font-size: 12px;
       color: var(--muted);
       line-height: 1.5;
+    }
+
+    .demo-note a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      margin-bottom: 12px;
+      font-family: inherit;
+    }
+
+    .auth-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .auth-submit {
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .auth-error {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    .role-card.selected {
+      border-color: var(--primary);
+      background: #f0fdf4;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      font-size: 13px;
+      grid-column: 1 / -1;
+    }
+
+
+    /* ===== GOOGLE LOGIN & LOGOUT MOBILE ===== */
+    .google-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
+      transition: .2s;
+    }
+    .google-btn:hover { border-color: #4285f4; box-shadow: 0 4px 14px rgba(66,133,244,.18); }
+    .google-btn:disabled { opacity: .6; cursor: wait; }
+    .google-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 16px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .setup-title { font-size: 18px; color: var(--text); margin-bottom: 4px; }
+    .setup-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    .topbar-logout { display: none; }
+    .profile-logout { margin-top: 12px; width: 100%; }
+    @media (max-width: 700px) {
+      .topbar-logout { display: inline-flex; }
     }
 
     /* =========================
@@ -1106,6 +1266,14 @@
     .shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.shop-card{background:#fff;border:1px solid var(--border);border-radius:17px;padding:17px;box-shadow:var(--shadow)}.shop-head{display:flex;gap:10px;align-items:center}.shop-logo{width:48px;height:48px;border-radius:14px;background:var(--secondary);display:flex;align-items:center;justify-content:center;font-size:24px}.shop-card h3{font-size:14px}.shop-card p{font-size:10px;color:var(--muted);margin-top:3px}.shop-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:14px}.shop-stats div{background:var(--bg);border-radius:9px;padding:8px;text-align:center}.shop-stats strong{display:block;font-size:12px}.shop-stats small{font-size:8px;color:var(--muted)}
     @media(max-width:1000px){.product-grid{grid-template-columns:repeat(3,1fr)}.category-grid{grid-template-columns:repeat(3,1fr)}.shop-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:700px){.product-grid{grid-template-columns:repeat(2,1fr);gap:10px}.service-grid,.shop-grid{grid-template-columns:1fr}.product-photo{height:105px}.category-grid{grid-template-columns:repeat(3,1fr)}.store-banner{align-items:flex-start;flex-direction:column}}
+    .owner-actions{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+    .progress-wrap{margin-top:12px}
+    .progress-label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:5px}
+    .progress-bar{height:7px;background:#eef2f0;border-radius:99px;overflow:hidden}
+    .progress-bar span{display:block;height:100%;background:var(--primary);border-radius:99px}
+    .owner-note{font-size:10px;color:var(--muted);margin-top:7px}
+
+
 
   </style>
 </head>
@@ -1117,6 +1285,20 @@
 ===================================================== -->
 
 <div class="login-screen" id="loginScreen">
+
+  <div class="login-decor" aria-hidden="true">
+    <span class="leaf">🌱</span>
+    <span class="leaf">🍃</span>
+    <span class="leaf">🌿</span>
+    <span class="leaf">🌾</span>
+    <span class="leaf">🍀</span>
+    <span class="leaf">🌱</span>
+    <span class="leaf">🍃</span>
+    <span class="leaf">🌿</span>
+    <span class="leaf">🌾</span>
+    <span class="leaf">🍀</span>
+  </div>
+
   <div class="login-card">
 
     <div class="logo">🌱</div>
@@ -1124,26 +1306,92 @@
     <h1>PETANI</h1>
     <p class="subtitle">Ekosistem Digital Pertanian</p>
 
-    <div class="role-grid">
+    <div id="authError" class="auth-error" style="display:none"></div>
 
-      <button class="role-card" onclick="loginAs('pengguna')">
+    <!-- FORM MASUK / DAFTAR -->
+    <div id="loginStepForm">
+
+    <button type="button" class="google-btn" id="googleBtn" onclick="signInWithGoogle()">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      <span id="googleBtnText">Lanjutkan dengan Google</span>
+    </button>
+
+    <div class="auth-divider">atau gunakan email</div>
+
+    <div id="registerNameField" style="display:none">
+      <input type="text" id="authName" class="auth-input" placeholder="Nama lengkap" />
+    </div>
+
+    <input type="email" id="authEmail" class="auth-input" placeholder="Email" autocomplete="email" />
+    <input type="password" id="authPassword" class="auth-input" placeholder="Kata sandi (min. 6 karakter)" autocomplete="current-password" />
+
+    <div class="role-grid" id="registerRoleField" style="display:none">
+
+      <button type="button" class="role-card" id="roleCardPengguna" onclick="selectRegisterRole('pengguna')">
         <div class="role-icon">👨‍🌾</div>
         <strong>Petani Pengguna</strong>
         <span>Petani, pemilik & pengelola lahan</span>
       </button>
 
-      <button class="role-card" onclick="loginAs('mitra')">
+      <button type="button" class="role-card" id="roleCardMitra" onclick="selectRegisterRole('mitra')">
         <div class="role-icon">🧑‍🌾</div>
         <strong>Petani Mitra</strong>
         <span>Pemanen, pekerja & penyedia jasa</span>
       </button>
 
+      <button type="button" class="role-card" id="roleCardKeduanya" onclick="selectRegisterRole('keduanya')" style="grid-column:1 / -1">
+        <div class="role-icon">👨‍🌾🤝🧑‍🌾</div>
+        <strong>Pemilik Lahan & Pekerja</strong>
+        <span>Satu akun untuk mengelola lahan sekaligus menerima pekerjaan</span>
+      </button>
+
     </div>
 
-    <p class="demo-note">
-      Prototype PETANI Cloud v0.1<br>
-      Pilih jenis akun untuk mencoba aplikasi.
+    <div id="registerRoleHint" class="demo-note" style="display:none;margin-top:8px">Satu akun dapat digunakan untuk kedua peran. Pilih “Pemilik Lahan & Pekerja” jika ingin menggunakan keduanya.</div>
+
+    <button type="button" class="btn btn-primary auth-submit" id="authSubmitBtn" onclick="handleAuthSubmit()" style="margin-top:14px">
+      Masuk
+    </button>
+
+    <p class="demo-note" id="authToggleNote">
+      Belum punya akun? <a href="#" onclick="toggleAuthMode(); return false;">Daftar di sini</a>
     </p>
+
+    </div><!-- /loginStepForm -->
+
+    <!-- PENGGUNA GOOGLE BARU: pilih jenis akun sekali saja -->
+    <div id="loginStepRole" style="display:none">
+      <h2 class="setup-title" id="setupGreeting">Selamat datang!</h2>
+      <p class="setup-sub">Pilih jenis akun Anda. Cukup sekali, dan bisa dipakai untuk kedua peran.</p>
+
+      <div class="role-grid">
+        <button type="button" class="role-card" id="gRolePengguna" onclick="selectGoogleRole('pengguna')">
+          <div class="role-icon">👨‍🌾</div>
+          <strong>Petani Pengguna</strong>
+          <span>Petani, pemilik & pengelola lahan</span>
+        </button>
+        <button type="button" class="role-card" id="gRoleMitra" onclick="selectGoogleRole('mitra')">
+          <div class="role-icon">🧑‍🌾</div>
+          <strong>Petani Mitra</strong>
+          <span>Pemanen, pekerja & penyedia jasa</span>
+        </button>
+        <button type="button" class="role-card" id="gRoleKeduanya" onclick="selectGoogleRole('keduanya')" style="grid-column:1 / -1">
+          <div class="role-icon">👨‍🌾🤝🧑‍🌾</div>
+          <strong>Pemilik Lahan & Pekerja</strong>
+          <span>Satu akun untuk mengelola lahan sekaligus menerima pekerjaan</span>
+        </button>
+      </div>
+
+      <button type="button" class="btn btn-primary auth-submit" id="roleConfirmBtn" onclick="confirmRoleSetup()" style="margin-top:16px">
+        Lanjutkan
+      </button>
+      <p class="demo-note"><a href="#" onclick="logout(); return false;">Batal & ganti akun</a></p>
+    </div>
 
   </div>
 </div>
@@ -1242,8 +1490,12 @@
 
         <button class="icon-button" onclick="showPage('notifikasi')">
           🔔
-          <span class="notification-dot"></span>
+          <span class="notification-dot" id="notifDot" style="display:none"></span>
         </button>
+
+        <button class="icon-button" id="roleSwitchBtn" onclick="openRoleSwitcher()" title="Ganti peran" style="display:none">🔄</button>
+
+        <button class="icon-button topbar-logout" onclick="confirmLogout()" title="Keluar" aria-label="Keluar">↪️</button>
 
         <div class="user-mini">
           <div class="avatar" id="topAvatar">AR</div>
@@ -1276,7 +1528,7 @@
             <span>Jumlah Lahan</span>
             <div class="stat-icon">🌱</div>
           </div>
-          <h3>3</h3>
+          <h3 id="statFarmCount">0</h3>
           <p>Lahan aktif</p>
         </div>
 
@@ -1285,8 +1537,8 @@
             <span>Pekerjaan</span>
             <div class="stat-icon">📋</div>
           </div>
-          <h3>4</h3>
-          <p>Aktivitas berjalan</p>
+          <h3 id="statJobCount">0</h3>
+          <p>Aktivitas pekerjaan</p>
         </div>
 
         <div class="stat-card">
@@ -1294,8 +1546,8 @@
             <span>Hasil Panen</span>
             <div class="stat-icon">🌾</div>
           </div>
-          <h3>2,8 T</h3>
-          <p>Bulan ini</p>
+          <h3 id="statHarvest">0 kg</h3>
+          <p>Belum ada catatan</p>
         </div>
 
         <div class="stat-card">
@@ -1303,7 +1555,7 @@
             <span>Pendapatan</span>
             <div class="stat-icon">💰</div>
           </div>
-          <h3>Rp8,4 jt</h3>
+          <h3 id="statIncome">Rp0</h3>
           <p>Bulan ini</p>
         </div>
 
@@ -1343,6 +1595,11 @@
       </div>
 
 
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header"><h3>Progres Pekerjaan Lahan</h3><button class="link-button" onclick="showPage('pekerjaan')">Kelola</button></div>
+        <div id="dashboardJobSummary" class="list"><div class="empty-state">Memuat progres pekerjaan…</div></div>
+      </div>
+
       <div class="content-grid">
 
         <div class="card">
@@ -1354,42 +1611,7 @@
             </button>
           </div>
 
-          <div class="list">
-
-            <div class="list-item">
-              <div class="list-main">
-                <div class="list-icon">🌾</div>
-                <div>
-                  <strong>Panen Sawit selesai</strong>
-                  <small>Kebun Makmur • 850 kg</small>
-                </div>
-              </div>
-              <span class="badge success">Selesai</span>
-            </div>
-
-            <div class="list-item">
-              <div class="list-main">
-                <div class="list-icon">🧑‍🌾</div>
-                <div>
-                  <strong>Andi menerima pekerjaan</strong>
-                  <small>Panen Sawit • 25 September</small>
-                </div>
-              </div>
-              <span class="badge info">Aktif</span>
-            </div>
-
-            <div class="list-item">
-              <div class="list-main">
-                <div class="list-icon">💰</div>
-                <div>
-                  <strong>Pembayaran diterima</strong>
-                  <small>Panen Kebun Makmur</small>
-                </div>
-              </div>
-              <span class="badge success">Rp2,4 jt</span>
-            </div>
-
-          </div>
+          <div class="list"><div id="dashActivity"><div class="empty-state">Belum ada aktivitas.</div></div></div>
 
         </div>
 
@@ -1403,39 +1625,7 @@
             </button>
           </div>
 
-          <div class="list">
-
-            <div class="list-item">
-              <div class="list-main">
-                <div class="list-icon">🔔</div>
-                <div>
-                  <strong>Pekerjaan diterima</strong>
-                  <small>5 menit lalu</small>
-                </div>
-              </div>
-            </div>
-
-            <div class="list-item">
-              <div class="list-main">
-                <div class="list-icon">📍</div>
-                <div>
-                  <strong>Mitra berada di sekitar</strong>
-                  <small>3,2 km dari Kebun Makmur</small>
-                </div>
-              </div>
-            </div>
-
-            <div class="list-item">
-              <div class="list-main">
-                <div class="list-icon">⭐</div>
-                <div>
-                  <strong>Berikan rating</strong>
-                  <small>Pekerjaan selesai</small>
-                </div>
-              </div>
-            </div>
-
-          </div>
+          <div class="list"><div id="dashNotif"><div class="empty-state">Belum ada notifikasi.</div></div></div>
 
         </div>
 
@@ -1462,102 +1652,8 @@
       </div>
 
 
-      <div class="farm-grid">
-
-        <div class="farm-card">
-
-          <div class="farm-photo">🌴</div>
-
-          <div class="farm-content">
-            <h3>Kebun Makmur</h3>
-            <div class="farm-location">📍 Lampung Selatan</div>
-
-            <div class="farm-info">
-              <div>
-                <small>Komoditas</small>
-                <strong>Sawit</strong>
-              </div>
-              <div>
-                <small>Luas</small>
-                <strong>4,2 ha</strong>
-              </div>
-              <div>
-                <small>Status</small>
-                <strong>Aktif</strong>
-              </div>
-              <div>
-                <small>Panen</small>
-                <strong>850 kg</strong>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="farm-card">
-
-          <div class="farm-photo">🌾</div>
-
-          <div class="farm-content">
-            <h3>Sawah Harapan</h3>
-            <div class="farm-location">📍 Lampung Selatan</div>
-
-            <div class="farm-info">
-              <div>
-                <small>Komoditas</small>
-                <strong>Padi</strong>
-              </div>
-              <div>
-                <small>Luas</small>
-                <strong>1,5 ha</strong>
-              </div>
-              <div>
-                <small>Status</small>
-                <strong>Aktif</strong>
-              </div>
-              <div>
-                <small>Musim</small>
-                <strong>MT II</strong>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="farm-card">
-
-          <div class="farm-photo">🌽</div>
-
-          <div class="farm-content">
-            <h3>Lahan Sejahtera</h3>
-            <div class="farm-location">📍 Bandar Lampung</div>
-
-            <div class="farm-info">
-              <div>
-                <small>Komoditas</small>
-                <strong>Jagung</strong>
-              </div>
-              <div>
-                <small>Luas</small>
-                <strong>2 ha</strong>
-              </div>
-              <div>
-                <small>Status</small>
-                <strong>Aktif</strong>
-              </div>
-              <div>
-                <small>Panen</small>
-                <strong>650 kg</strong>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
+      <div class="farm-grid" id="farmGrid">
+        <div class="empty-state">Memuat data lahan…</div>
 
       </div>
 
@@ -1584,108 +1680,10 @@
       </div>
 
 
-      <div class="job-grid">
-
-        <div class="job-card">
-
-          <div class="job-top">
-
-            <div class="job-title">
-              <div class="job-icon">🌴</div>
-              <div>
-                <h3>Panen Sawit</h3>
-                <p>Kebun Makmur</p>
-              </div>
-            </div>
-
-            <span class="badge warning">Mencari Mitra</span>
-
-          </div>
-
-          <div class="job-details">
-
-            <div class="job-detail">
-              <span>📅 Tanggal</span>
-              25 September 2026
-            </div>
-
-            <div class="job-detail">
-              <span>👥 Pekerja</span>
-              3 orang
-            </div>
-
-            <div class="job-detail">
-              <span>📍 Lokasi</span>
-              Lampung Selatan
-            </div>
-
-            <div class="job-detail">
-              <span>📏 Luas</span>
-              2 ha
-            </div>
-
-          </div>
-
-          <div class="job-bottom">
-            <span class="salary">Rp750.000/hari</span>
-            <button class="btn btn-outline" onclick="showToast('Detail pekerjaan dibuka')">
-              Detail
-            </button>
-          </div>
-
-        </div>
-
-
-        <div class="job-card">
-
-          <div class="job-top">
-
-            <div class="job-title">
-              <div class="job-icon">🌾</div>
-              <div>
-                <h3>Penyiangan Padi</h3>
-                <p>Sawah Harapan</p>
-              </div>
-            </div>
-
-            <span class="badge info">Berjalan</span>
-
-          </div>
-
-          <div class="job-details">
-
-            <div class="job-detail">
-              <span>📅 Tanggal</span>
-              24 September 2026
-            </div>
-
-            <div class="job-detail">
-              <span>👥 Pekerja</span>
-              4 orang
-            </div>
-
-            <div class="job-detail">
-              <span>📍 Lokasi</span>
-              Lampung Selatan
-            </div>
-
-            <div class="job-detail">
-              <span>📏 Luas</span>
-              1,5 ha
-            </div>
-
-          </div>
-
-          <div class="job-bottom">
-            <span class="salary">Rp120.000/hari</span>
-            <button class="btn btn-outline">
-              Detail
-            </button>
-          </div>
-
-        </div>
-
+      <div class="job-grid" id="jobGrid">
+        <div class="empty-state">Memuat data pekerjaan…</div>
       </div>
+
 
     </section>
 
@@ -1727,36 +1725,7 @@
               </tr>
             </thead>
 
-            <tbody>
-
-              <tr>
-                <td>23 Sep 2026</td>
-                <td>Kebun Makmur</td>
-                <td>🌴 Sawit</td>
-                <td>850 kg</td>
-                <td>CV Makmur Jaya</td>
-                <td><span class="badge success">Terjual</span></td>
-              </tr>
-
-              <tr>
-                <td>17 Sep 2026</td>
-                <td>Lahan Sejahtera</td>
-                <td>🌽 Jagung</td>
-                <td>650 kg</td>
-                <td>UD Tani Jaya</td>
-                <td><span class="badge success">Terjual</span></td>
-              </tr>
-
-              <tr>
-                <td>10 Sep 2026</td>
-                <td>Kebun Makmur</td>
-                <td>🌴 Sawit</td>
-                <td>1.320 kg</td>
-                <td>CV Makmur Jaya</td>
-                <td><span class="badge warning">Menunggu</span></td>
-              </tr>
-
-            </tbody>
+            <tbody id="panenBody"><tr><td colspan="6"><div class="empty-state">Belum ada hasil panen.</div></td></tr></tbody>
 
           </table>
 
@@ -1774,7 +1743,7 @@
     <section class="page" id="page-marketplace">
       <div class="section-header">
         <div><h2>Marketplace</h2><p>Produk dan jasa yang dibutuhkan dalam kegiatan pertanian.</p></div>
-        <button class="btn btn-primary cart-pill" onclick="openCart()">🛒 Keranjang <span class="cart-count" id="cartCount">2</span></button>
+        <button class="btn btn-primary cart-pill" onclick="openCart()">🛒 Keranjang <span class="cart-count" id="cartCount">0</span></button>
       </div>
 
       <div class="store-banner">
@@ -1803,27 +1772,13 @@
 
       <div id="marketProduk">
         <div class="product-grid" id="productGrid">
-          <div class="product-card" data-category="bibit" data-search="bibit sawit unggul tani jaya">
-            <div class="product-photo"><span class="promo-tag">PROMO</span>🌱</div><div class="product-body"><h3>Bibit Sawit Unggul</h3><p>Benih siap tanam untuk kebun produktif.</p><div class="product-price">Rp85.000</div><div class="product-meta">per bibit • Toko Tani Jaya</div><div class="product-actions"><button class="btn btn-outline" onclick="showToast('Detail produk dibuka')">Detail</button><button class="btn btn-primary" onclick="addToCart('Bibit Sawit Unggul',85000,'🌱')">+ Keranjang</button></div></div>
-          </div>
-          <div class="product-card" data-category="pupuk" data-search="pupuk organik subur makmur pupuk">
-            <div class="product-photo">🧪</div><div class="product-body"><h3>Pupuk Organik Premium</h3><p>Pupuk organik untuk membantu menjaga kesuburan tanah.</p><div class="product-price">Rp125.000</div><div class="product-meta">25 kg • Toko Subur Makmur</div><div class="product-actions"><button class="btn btn-outline" onclick="showToast('Detail produk dibuka')">Detail</button><button class="btn btn-primary" onclick="addToCart('Pupuk Organik Premium',125000,'🧪')">+ Keranjang</button></div></div>
-          </div>
-          <div class="product-card" data-category="alat" data-search="sprayer alat tani semprot">
-            <div class="product-photo">🚜</div><div class="product-body"><h3>Sprayer Elektrik</h3><p>Peralatan semprot untuk kebutuhan perawatan tanaman.</p><div class="product-price">Rp780.000</div><div class="product-meta">1 unit • Toko Alat Tani</div><div class="product-actions"><button class="btn btn-outline" onclick="showToast('Detail produk dibuka')">Detail</button><button class="btn btn-primary" onclick="addToCart('Sprayer Elektrik',780000,'🚜')">+ Keranjang</button></div></div>
-          </div>
-          <div class="product-card" data-category="produk" data-search="beras premium hasil tani beras">
-            <div class="product-photo"><span class="promo-tag">BARU</span>🌾</div><div class="product-body"><h3>Beras Premium Petani</h3><p>Hasil panen langsung dari jaringan petani PETANI.</p><div class="product-price">Rp175.000</div><div class="product-meta">5 kg • Sawah Harapan</div><div class="product-actions"><button class="btn btn-outline" onclick="showToast('Detail produk dibuka')">Detail</button><button class="btn btn-primary" onclick="addToCart('Beras Premium Petani',175000,'🌾')">+ Keranjang</button></div></div>
-          </div>
+          <div class="empty-state">Memuat produk…</div>
         </div>
       </div>
 
       <div id="marketJasa" style="display:none">
         <div class="service-grid">
-          <div class="service-card"><div class="service-top"><div class="service-icon">🪓</div><div><h3>Jasa Panen Sawit</h3><p>Tim pemanen berpengalaman untuk pekerjaan panen.</p></div></div><div class="service-info"><div><span>📍 Lokasi</span>Lampung Selatan</div><div><span>⭐ Rating</span>4,9 / 5</div><div><span>👥 Tim</span>4 orang</div><div><span>📏 Kapasitas</span>3 ha/hari</div></div><div class="service-bottom"><strong class="salary">Rp750.000/hari</strong><button class="btn btn-primary" onclick="showToast('Permintaan jasa dikirim')">Pesan Jasa</button></div></div>
-          <div class="service-card"><div class="service-top"><div class="service-icon">🚜</div><div><h3>Jasa Traktor</h3><p>Pengolahan tanah dan persiapan lahan pertanian.</p></div></div><div class="service-info"><div><span>📍 Lokasi</span>Bandar Lampung</div><div><span>⭐ Rating</span>4,8 / 5</div><div><span>🚜 Alat</span>Traktor roda 4</div><div><span>📅 Ketersediaan</span>Siap pesan</div></div><div class="service-bottom"><strong class="salary">Mulai Rp450.000</strong><button class="btn btn-primary" onclick="showToast('Permintaan jasa dikirim')">Pesan Jasa</button></div></div>
-          <div class="service-card"><div class="service-top"><div class="service-icon">🚚</div><div><h3>Jasa Angkut Hasil Panen</h3><p>Pengangkutan hasil panen dari lahan ke pembeli.</p></div></div><div class="service-info"><div><span>📍 Area</span>Lampung & sekitar</div><div><span>⭐ Rating</span>4,7 / 5</div><div><span>🚚 Armada</span>Pickup</div><div><span>📦 Kapasitas</span>1,5 ton</div></div><div class="service-bottom"><strong class="salary">Mulai Rp200.000</strong><button class="btn btn-primary" onclick="showToast('Permintaan jasa dikirim')">Pesan Jasa</button></div></div>
-          <div class="service-card"><div class="service-top"><div class="service-icon">🧑‍🌾</div><div><h3>Tenaga Kerja Tani</h3><p>Pekerja untuk tanam, pemupukan, penyiangan, dan pekerjaan lain.</p></div></div><div class="service-info"><div><span>📍 Lokasi</span>Lampung Selatan</div><div><span>⭐ Rating</span>4,9 / 5</div><div><span>👥 Tenaga</span>6 orang</div><div><span>🛠️ Keahlian</span>Multipekerjaan</div></div><div class="service-bottom"><strong class="salary">Mulai Rp120.000/hari</strong><button class="btn btn-primary" onclick="showToast('Permintaan tenaga dikirim')">Pesan</button></div></div>
+          <div class="empty-state">Belum ada jasa tersedia.</div>
         </div>
       </div>
     </section>
@@ -1833,122 +1788,40 @@
     ================================================= -->
     <section class="page" id="page-toko">
       <div class="section-header"><div><h2>Toko Saya</h2><p>Kelola produk atau jasa yang Anda tawarkan di PETANI.</p></div><button class="btn btn-primary" onclick="openModal('modalProduk')">+ Tambah Produk</button></div>
-      <div class="store-banner"><div><h3>🏪 Toko Tani Andi</h3><p>Toko Anda dapat menjual produk pertanian sekaligus menawarkan jasa.</p></div><div class="store-actions"><button class="btn" style="background:white;color:var(--primary)" onclick="openModal('modalProduk')">+ Produk</button><button class="btn" style="background:rgba(255,255,255,.16);color:white;border:1px solid rgba(255,255,255,.4)" onclick="openModal('modalJasa')">+ Jasa</button></div></div>
-      <div class="stats-grid"><div class="stat-card"><div class="stat-top"><span>Produk Aktif</span><div class="stat-icon">📦</div></div><h3>6</h3><p>Produk dijual</p></div><div class="stat-card"><div class="stat-top"><span>Pesanan</span><div class="stat-icon">🛒</div></div><h3>12</h3><p>Bulan ini</p></div><div class="stat-card"><div class="stat-top"><span>Pendapatan</span><div class="stat-icon">💰</div></div><h3>Rp3,8 jt</h3><p>Bulan ini</p></div><div class="stat-card"><div class="stat-top"><span>Rating</span><div class="stat-icon">⭐</div></div><h3>4,9</h3><p>Dari pembeli</p></div></div>
-      <div class="shop-grid"><div class="shop-card"><div class="shop-head"><div class="shop-logo">🌱</div><div><h3>Bibit & Tanaman</h3><p>4 produk aktif</p></div></div><div class="shop-stats"><div><strong>18</strong><small>Terjual</small></div><div><strong>4,9</strong><small>Rating</small></div><div><strong>Rp1,7 jt</strong><small>Omzet</small></div></div><br><button class="btn btn-outline" onclick="showToast('Daftar produk dibuka')">Kelola Produk</button></div><div class="shop-card"><div class="shop-head"><div class="shop-logo">🧑‍🌾</div><div><h3>Jasa Pertanian</h3><p>2 jasa aktif</p></div></div><div class="shop-stats"><div><strong>7</strong><small>Pesanan</small></div><div><strong>5,0</strong><small>Rating</small></div><div><strong>Rp2,1 jt</strong><small>Pendapatan</small></div></div><br><button class="btn btn-outline" onclick="openModal('modalJasa')">Kelola Jasa</button></div><div class="shop-card"><div class="shop-head"><div class="shop-logo">📢</div><div><h3>Promosi</h3><p>Jangkau pembeli sekitar</p></div></div><div class="shop-stats"><div><strong>1.240</strong><small>Dilihat</small></div><div><strong>86</strong><small>Klik</small></div><div><strong>6,9%</strong><small>Respons</small></div></div><br><button class="btn btn-primary" onclick="showToast('Fitur promosi akan dibuka')">Buat Promosi</button></div></div>
-    </section>
+      <div class="store-banner"><div><h3 id="storeTitle">🏪 Toko Saya</h3><p>Toko Anda dapat menjual produk pertanian sekaligus menawarkan jasa.</p></div><div class="store-actions"><button class="btn" style="background:white;color:var(--primary)" onclick="openModal('modalProduk')">+ Produk</button><button class="btn" style="background:rgba(255,255,255,.16);color:white;border:1px solid rgba(255,255,255,.4)" onclick="openModal('modalJasa')">+ Jasa</button></div></div>
+      <div class="stats-grid"><div class="stat-card"><div class="stat-top"><span>Produk Aktif</span><div class="stat-icon">📦</div></div><h3 id="tkProducts">0</h3><p>Produk dijual</p></div><div class="stat-card"><div class="stat-top"><span>Pesanan</span><div class="stat-icon">🛒</div></div><h3 id="tkOrders">0</h3><p>Total pesanan masuk</p></div><div class="stat-card"><div class="stat-top"><span>Pendapatan</span><div class="stat-icon">💰</div></div><h3 id="tkIncome">Rp0</h3><p>Penjualan selesai</p></div><div class="stat-card"><div class="stat-top"><span>Rating</span><div class="stat-icon">⭐</div></div><h3 id="tkRating">-</h3><p>Belum ada rating</p></div></div>
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header">
+          <h3>Produk Saya</h3>
+          <button class="link-button" onclick="openModal('modalProduk')">+ Tambah</button>
+        </div>
+        <div class="product-grid" id="myProductGrid">
+          <div class="empty-state">Memuat produk…</div>
+        </div>
+      </div>
+
+      <div class="shop-grid">
+        <div class="shop-card"><div class="shop-head"><div class="shop-logo">🧑‍🌾</div><div><h3>Jasa Pertanian</h3><p>Kelola jasa yang Anda tawarkan</p></div></div><br><button class="btn btn-outline" onclick="openModal('modalJasa')">Kelola Jasa</button></div>
+        <div class="shop-card"><div class="shop-head"><div class="shop-logo">📢</div><div><h3>Promosi</h3><p>Jangkau pembeli sekitar</p></div></div><br><button class="btn btn-primary" onclick="showToast('Fitur promosi akan dibuka')">Buat Promosi</button></div>
+      </div>
+      </section>
 
     <!-- =================================================
          TRANSAKSI
     ================================================= -->
 
     <section class="page" id="page-transaksi">
-
-      <div class="section-header">
-
-        <div>
-          <h2>Transaksi</h2>
-          <p>Riwayat transaksi dan pembayaran.</p>
-        </div>
-
-      </div>
-
-
+      <div class="section-header"><div><h2>Transaksi</h2><p>Pembelian dan penjualan marketplace Anda.</p></div></div>
       <div class="stats-grid">
-
-        <div class="stat-card">
-          <div class="stat-top">
-            <span>Pendapatan</span>
-            <div class="stat-icon">💰</div>
-          </div>
-          <h3>Rp8,4 jt</h3>
-          <p>Bulan berjalan</p>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-top">
-            <span>Pengeluaran</span>
-            <div class="stat-icon">💸</div>
-          </div>
-          <h3>Rp2,1 jt</h3>
-          <p>Bulan berjalan</p>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-top">
-            <span>Menunggu</span>
-            <div class="stat-icon">⏳</div>
-          </div>
-          <h3>Rp750 rb</h3>
-          <p>Transaksi</p>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-top">
-            <span>Selesai</span>
-            <div class="stat-icon">✓</div>
-          </div>
-          <h3>18</h3>
-          <p>Transaksi</p>
-        </div>
-
+        <div class="stat-card"><div class="stat-top"><span>Pendapatan</span><div class="stat-icon">💰</div></div><h3 id="stIncome">Rp0</h3><p>Penjualan selesai</p></div>
+        <div class="stat-card"><div class="stat-top"><span>Pengeluaran</span><div class="stat-icon">💸</div></div><h3 id="stExpense">Rp0</h3><p>Pembelian dibayar</p></div>
+        <div class="stat-card"><div class="stat-top"><span>Menunggu</span><div class="stat-icon">⏳</div></div><h3 id="stPending">Rp0</h3><p>Penjualan berjalan</p></div>
+        <div class="stat-card"><div class="stat-top"><span>Selesai</span><div class="stat-icon">✓</div></div><h3 id="stDone">0</h3><p>Transaksi</p></div>
       </div>
-
-
-      <div class="card">
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Tanggal</th>
-                <th>Jenis</th>
-                <th>Keterangan</th>
-                <th>Nominal</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              <tr>
-                <td>#TRX-1028</td>
-                <td>23 Sep 2026</td>
-                <td>Hasil Panen</td>
-                <td>Penjualan TBS</td>
-                <td>Rp2.400.000</td>
-                <td><span class="badge success">Selesai</span></td>
-              </tr>
-
-              <tr>
-                <td>#TRX-1027</td>
-                <td>22 Sep 2026</td>
-                <td>Jasa</td>
-                <td>Panen Sawit</td>
-                <td>Rp750.000</td>
-                <td><span class="badge warning">Menunggu</span></td>
-              </tr>
-
-              <tr>
-                <td>#TRX-1026</td>
-                <td>20 Sep 2026</td>
-                <td>Sarana</td>
-                <td>Pupuk</td>
-                <td>Rp1.200.000</td>
-                <td><span class="badge success">Selesai</span></td>
-              </tr>
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
+      <div class="card"><div class="table-wrap"><table>
+        <thead><tr><th>ID</th><th>Tanggal</th><th>Jenis</th><th>Keterangan</th><th>Nominal</th><th>Status</th><th>Aksi</th></tr></thead>
+        <tbody id="orderRows"><tr><td colspan="7"><div class="empty-state">Belum ada transaksi.</div></td></tr></tbody>
+      </table></div></div>
     </section>
 
 
@@ -1957,75 +1830,8 @@
     ================================================= -->
 
     <section class="page" id="page-notifikasi">
-
-      <div class="section-header">
-
-        <div>
-          <h2>Notifikasi</h2>
-          <p>Informasi terbaru dari aktivitas PETANI.</p>
-        </div>
-
-        <button class="btn btn-outline" onclick="showToast('Semua notifikasi ditandai sudah dibaca')">
-          Tandai Dibaca
-        </button>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="list">
-
-          <div class="list-item">
-            <div class="list-main">
-              <div class="list-icon">📋</div>
-              <div>
-                <strong>Andi menerima pekerjaan Panen Sawit</strong>
-                <small>5 menit yang lalu • Kebun Makmur</small>
-              </div>
-            </div>
-            <span class="badge info">Baru</span>
-          </div>
-
-          <div class="list-item">
-            <div class="list-main">
-              <div class="list-icon">📍</div>
-              <div>
-                <strong>Mitra tersedia di sekitar lokasi</strong>
-                <small>3,2 km dari Kebun Makmur</small>
-              </div>
-            </div>
-            <span class="badge success">Info</span>
-          </div>
-
-          <div class="list-item">
-            <div class="list-main">
-              <div class="list-icon">💰</div>
-              <div>
-                <strong>Pembayaran berhasil diterima</strong>
-                <small>Rp2.400.000 • Transaksi #TRX-1028</small>
-              </div>
-            </div>
-            <span class="badge success">Selesai</span>
-          </div>
-
-          <div class="list-item">
-            <div class="list-main">
-              <div class="list-icon">⭐</div>
-              <div>
-                <strong>Berikan rating kepada mitra</strong>
-                <small>Pekerjaan Panen Sawit telah selesai</small>
-              </div>
-            </div>
-            <button class="btn btn-outline" onclick="showToast('Fitur rating akan dibuka')">
-              Rating
-            </button>
-          </div>
-
-        </div>
-
-      </div>
-
+      <div class="section-header"><div><h2>Notifikasi</h2><p>Informasi terbaru dari pesanan Anda.</p></div></div>
+      <div class="card"><div class="list" id="notifList"><div class="empty-state">Belum ada notifikasi.</div></div></div>
     </section>
 
 
@@ -2068,28 +1874,61 @@
 
           <div class="form-group">
             <label>Nomor Telepon</label>
-            <input value="08xx-xxxx-xxxx">
+            <input id="profilePhoneInput" placeholder="08xxxxxxxxxx">
           </div>
 
           <div class="form-group">
             <label>Provinsi</label>
-            <select>
-              <option>Lampung</option>
+            <select id="profileProvinceInput">
+              <option>Aceh</option>
+              <option>Sumatera Utara</option>
+              <option>Sumatera Barat</option>
+              <option>Riau</option>
+              <option>Jambi</option>
               <option>Sumatera Selatan</option>
+              <option>Bengkulu</option>
+              <option>Lampung</option>
+              <option>Kepulauan Bangka Belitung</option>
+              <option>Kepulauan Riau</option>
+              <option>DKI Jakarta</option>
               <option>Jawa Barat</option>
               <option>Jawa Tengah</option>
+              <option>DI Yogyakarta</option>
               <option>Jawa Timur</option>
+              <option>Banten</option>
+              <option>Bali</option>
+              <option>Nusa Tenggara Barat</option>
+              <option>Nusa Tenggara Timur</option>
+              <option>Kalimantan Barat</option>
+              <option>Kalimantan Tengah</option>
+              <option>Kalimantan Selatan</option>
+              <option>Kalimantan Timur</option>
+              <option>Kalimantan Utara</option>
+              <option>Sulawesi Utara</option>
+              <option>Sulawesi Tengah</option>
+              <option>Sulawesi Selatan</option>
+              <option>Sulawesi Tenggara</option>
+              <option>Gorontalo</option>
+              <option>Sulawesi Barat</option>
+              <option>Maluku</option>
+              <option>Maluku Utara</option>
+              <option>Papua</option>
+              <option>Papua Barat</option>
+              <option>Papua Selatan</option>
+              <option>Papua Tengah</option>
+              <option>Papua Pegunungan</option>
+              <option>Papua Barat Daya</option>
             </select>
           </div>
 
           <div class="form-group">
             <label>Kecamatan</label>
-            <input value="Kecamatan Contoh">
+            <input id="profileDistrictInput" placeholder="Kecamatan">
           </div>
 
           <div class="form-group full">
             <label>Alamat</label>
-            <textarea>Alamat pengguna PETANI</textarea>
+            <textarea id="profileAddressInput" placeholder="Alamat lengkap"></textarea>
           </div>
 
         </div>
@@ -2098,6 +1937,10 @@
 
         <button class="btn btn-primary" onclick="saveProfile()">
           Simpan Profil
+        </button>
+
+        <button class="btn btn-danger profile-logout" onclick="confirmLogout()">
+          ↪️ Keluar dari Akun
         </button>
 
       </div>
@@ -2192,12 +2035,12 @@
 
       <div class="form-group">
         <label>Luas Lahan</label>
-        <input type="number" placeholder="Contoh: 2.5">
+        <input type="number" id="farmSize" placeholder="Contoh: 2.5">
       </div>
 
       <div class="form-group">
         <label>Satuan</label>
-        <select>
+        <select id="farmUnit">
           <option>Hektare (ha)</option>
           <option>Meter persegi</option>
         </select>
@@ -2205,7 +2048,7 @@
 
       <div class="form-group full">
         <label>Lokasi</label>
-        <input placeholder="Alamat/lokasi lahan">
+        <input id="farmLocation" placeholder="Alamat/lokasi lahan">
       </div>
 
       <div class="form-group full">
@@ -2252,9 +2095,14 @@
 
     <div class="form-grid">
 
+      <div class="form-group full">
+        <label>Lahan</label>
+        <select id="jobFarmId"><option value="">Pilih lahan...</option></select>
+      </div>
+
       <div class="form-group">
         <label>Jenis Komoditas</label>
-        <select>
+        <select id="jobCommodity">
           <option>Sawit</option>
           <option>Padi</option>
           <option>Jagung</option>
@@ -2268,7 +2116,7 @@
 
       <div class="form-group">
         <label>Jenis Pekerjaan</label>
-        <select>
+        <select id="jobType">
           <option>Panen</option>
           <option>Tanam</option>
           <option>Pemupukan</option>
@@ -2283,32 +2131,32 @@
 
       <div class="form-group">
         <label>Tanggal Mulai</label>
-        <input type="date">
+        <input id="jobStartDate" type="date">
       </div>
 
       <div class="form-group">
         <label>Durasi</label>
-        <input placeholder="Contoh: 2 hari">
+        <input id="jobDuration" placeholder="Contoh: 2 hari">
       </div>
 
       <div class="form-group">
         <label>Jumlah Pekerja</label>
-        <input type="number" min="1" placeholder="Contoh: 3">
+        <input id="jobWorkers" type="number" min="1" placeholder="Contoh: 3">
       </div>
 
       <div class="form-group">
         <label>Upah</label>
-        <input placeholder="Rp per hari/orang">
+        <input id="jobWage" placeholder="Rp per hari/orang">
       </div>
 
       <div class="form-group full">
         <label>Lokasi Pekerjaan</label>
-        <input placeholder="Lokasi pekerjaan">
+        <input id="jobLocation" placeholder="Lokasi pekerjaan">
       </div>
 
       <div class="form-group full">
         <label>Keterangan</label>
-        <textarea placeholder="Jelaskan pekerjaan yang dibutuhkan..."></textarea>
+        <textarea id="jobDescription" placeholder="Jelaskan pekerjaan yang dibutuhkan..."></textarea>
       </div>
 
     </div>
@@ -2353,15 +2201,13 @@
       <div class="form-group">
         <label>Lahan</label>
         <select>
-          <option>Kebun Makmur</option>
-          <option>Sawah Harapan</option>
-          <option>Lahan Sejahtera</option>
+          <option value="">Pilih lahan…</option>
         </select>
       </div>
 
       <div class="form-group">
         <label>Komoditas</label>
-        <select>
+        <select id="harvestCommodity">
           <option>Sawit</option>
           <option>Padi</option>
           <option>Jagung</option>
@@ -2428,7 +2274,7 @@
 <div class="modal-overlay" id="modalToko"><div class="modal"><div class="modal-header"><div><h3>Buka Toko</h3><p style="font-size:11px;color:#6b7280;margin-top:3px;">Jadikan akun Anda sebagai penjual produk atau penyedia jasa.</p></div><button class="close-modal" onclick="closeModal('modalToko')">✕</button></div><div class="form-grid"><div class="form-group full"><label>Nama Toko</label><input id="storeName" placeholder="Contoh: Toko Tani Sejahtera"></div><div class="form-group"><label>Jenis Toko</label><select><option>Produk Pertanian</option><option>Jasa Pertanian</option><option>Produk & Jasa</option></select></div><div class="form-group"><label>Lokasi</label><input placeholder="Kecamatan / Kabupaten"></div><div class="form-group full"><label>Deskripsi Toko</label><textarea placeholder="Jelaskan produk atau jasa yang ditawarkan..."></textarea></div></div><br><button class="btn btn-primary" onclick="createStore()">Buka Toko</button></div></div>
 
 <!-- MODAL PRODUK -->
-<div class="modal-overlay" id="modalProduk"><div class="modal"><div class="modal-header"><div><h3>Tambah Produk</h3><p style="font-size:11px;color:#6b7280;margin-top:3px;">Tambahkan barang yang ingin dijual.</p></div><button class="close-modal" onclick="closeModal('modalProduk')">✕</button></div><div class="form-grid"><div class="form-group full"><label>Nama Produk</label><input id="newProductName" placeholder="Contoh: Pupuk Organik"></div><div class="form-group"><label>Kategori</label><select><option>Bibit</option><option>Pupuk</option><option>Alat Tani</option><option>Hasil Tani</option><option>Lainnya</option></select></div><div class="form-group"><label>Harga</label><input type="number" placeholder="Harga jual"></div><div class="form-group"><label>Stok</label><input type="number" placeholder="Jumlah stok"></div><div class="form-group"><label>Satuan</label><input placeholder="kg / unit / bibit"></div><div class="form-group full"><label>Deskripsi</label><textarea placeholder="Deskripsi produk..."></textarea></div><div class="form-group full"><label>Foto Produk</label><input type="file" accept="image/*"></div></div><br><button class="btn btn-primary" onclick="saveProduct()">Publikasikan Produk</button></div></div>
+<div class="modal-overlay" id="modalProduk"><div class="modal"><div class="modal-header"><div><h3>Tambah Produk</h3><p style="font-size:11px;color:#6b7280;margin-top:3px;">Tambahkan barang yang ingin dijual.</p></div><button class="close-modal" onclick="closeModal('modalProduk')">✕</button></div><div class="form-grid"><div class="form-group full"><label>Nama Produk</label><input id="newProductName" placeholder="Contoh: Pupuk Organik"></div><div class="form-group"><label>Kategori</label><select id="newProductCategory"><option>Bibit</option><option>Pupuk</option><option>Alat Tani</option><option>Hasil Tani</option><option>Lainnya</option></select></div><div class="form-group"><label>Harga</label><input id="newProductPrice" type="number" placeholder="Harga jual"></div><div class="form-group"><label>Stok</label><input id="newProductStock" type="number" placeholder="Jumlah stok"></div><div class="form-group"><label>Satuan</label><input id="newProductUnit" placeholder="kg / unit / bibit"></div><div class="form-group full"><label>Deskripsi</label><textarea id="newProductDescription" placeholder="Deskripsi produk..."></textarea></div><div class="form-group full"><label>Foto Produk</label><input type="file" accept="image/*"></div></div><br><button class="btn btn-primary" onclick="saveProduct()">Publikasikan Produk</button></div></div>
 
 <!-- MODAL JASA -->
 <div class="modal-overlay" id="modalJasa"><div class="modal"><div class="modal-header"><div><h3>Tambah Jasa</h3><p style="font-size:11px;color:#6b7280;margin-top:3px;">Tawarkan kemampuan atau peralatan pertanian Anda.</p></div><button class="close-modal" onclick="closeModal('modalJasa')">✕</button></div><div class="form-grid"><div class="form-group full"><label>Nama Jasa</label><input placeholder="Contoh: Jasa Panen Sawit"></div><div class="form-group"><label>Kategori</label><select><option>Panen</option><option>Tenaga Kerja</option><option>Traktor / Alat</option><option>Pengangkutan</option><option>Pemupukan</option><option>Lainnya</option></select></div><div class="form-group"><label>Tarif</label><input placeholder="Contoh: Rp750.000/hari"></div><div class="form-group full"><label>Area Layanan</label><input placeholder="Kecamatan / Kabupaten / Provinsi"></div><div class="form-group full"><label>Deskripsi</label><textarea placeholder="Jelaskan jasa, kapasitas, pengalaman, atau peralatan yang tersedia..."></textarea></div></div><br><button class="btn btn-primary" onclick="saveService()">Publikasikan Jasa</button></div></div>
@@ -2441,432 +2287,1489 @@
 <div class="toast" id="toast"></div>
 
 
+
+<div class="modal-overlay" id="modalDetail"><div class="modal"><div class="modal-header"><div><h3 id="detName">Detail Produk</h3><p id="detSeller" style="font-size:11px;color:#6b7280;margin-top:3px;"></p></div><button class="close-modal" onclick="closeModal('modalDetail')">✕</button></div><div id="detBody"></div><div class="form-group" style="margin-top:12px"><label>Jumlah</label><input id="detQty" type="number" min="1" value="1"></div><br><button class="btn btn-primary" id="detAddBtn" style="width:100%">+ Tambah ke Keranjang</button></div></div>
+
+<div class="modal-overlay" id="modalCheckout"><div class="modal"><div class="modal-header"><div><h3>Checkout</h3><p style="font-size:11px;color:#6b7280;margin-top:3px;">Periksa pesanan, alamat, dan metode pembayaran.</p></div><button class="close-modal" onclick="closeModal('modalCheckout')">✕</button></div><div class="cart-list" id="coSummary"></div><div class="cart-total"><span>Total</span><span id="coTotal">Rp0</span></div><div class="form-grid" style="margin-top:12px"><div class="form-group full"><label>Alamat Pengiriman</label><textarea id="coAddress" placeholder="Alamat lengkap penerima..."></textarea></div><div class="form-group full"><label>Metode Pembayaran</label><select id="coMethod"><option>Transfer Bank</option><option>QRIS</option><option>E-Wallet</option></select></div></div><p style="font-size:10px;color:#6b7280;margin-top:8px">Pembayaran masih simulasi status (belum payment gateway). Pesanan dipisah otomatis per penjual.</p><br><button class="btn btn-primary" id="coBtn" style="width:100%" onclick="confirmCheckout()">Buat Pesanan</button></div></div>
+
+<div class="modal-overlay" id="modalShip"><div class="modal"><div class="modal-header"><div><h3>Kirim Pesanan</h3><p style="font-size:11px;color:#6b7280;margin-top:3px;">Isi jasa pengiriman dan nomor resi agar pembeli bisa melacak.</p></div><button class="close-modal" onclick="closeModal('modalShip')">✕</button></div><p id="shipItems" style="font-size:12px;font-weight:600"></p><p id="shipInfo" style="font-size:11px;color:#6b7280;margin:4px 0 10px"></p><div class="form-grid"><div class="form-group full"><label>Jasa Pengiriman</label><select id="shipCourier"></select></div><div class="form-group full"><label>Nomor Resi</label><input id="shipResi" placeholder="Contoh: JP1234567890 (kosongkan jika antar langsung)"></div></div><p id="shipResiHint" style="display:none"></p><br><button class="btn btn-primary" id="shipBtn" style="width:100%" onclick="confirmShip()">Konfirmasi Pengiriman</button></div></div>
+
+<div class="modal-overlay" id="modalOrder"><div class="modal"><div class="modal-header"><div><h3 id="odTitle">Detail Pesanan</h3><p style="font-size:11px;color:#6b7280;margin-top:3px;">Rincian dan riwayat status pesanan.</p></div><button class="close-modal" onclick="closeModal('modalOrder')">✕</button></div><div id="odBody"></div></div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+
 <script>
+/* =====================================================
+   STATE — data yang dipakai bersama antar modul.
+   Nanti bagian ini yang akan diganti dengan data
+   dari Firestore (bukan lagi hardcoded / localStorage).
+===================================================== */
 
-  /* =====================================================
-     DATA DEMO
-  ===================================================== */
+let currentRole = null;
+let currentUserId = null;
 
-  let currentRole = localStorage.getItem("petaniRole") || null;
+const userData = {
+  pengguna: {
+    name: "Andi Rahman",
+    initials: "AR",
+    role: "Petani Pengguna"
+  },
+  mitra: {
+    name: "Budi Santoso",
+    initials: "BS",
+    role: "Petani Mitra"
+  }
+};
 
-  const userData = {
-    pengguna: {
-      name: "Andi Rahman",
-      initials: "AR",
-      role: "Petani Pengguna"
-    },
-    mitra: {
-      name: "Budi Santoso",
-      initials: "BS",
-      role: "Petani Mitra"
+let cart = []; // diisi per akun oleh loadCart()
+let marketCategory = "all";
+
+
+/* =====================================================
+   UI — toast & modal, dipakai oleh semua modul lain.
+===================================================== */
+
+let toastTimer;
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2600);
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add("show");
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove("show");
+}
+
+document.querySelectorAll(".modal-overlay").forEach(modal => {
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      modal.classList.remove("show");
     }
+  });
+});
+
+
+/* =====================================================
+   NAVIGATION — pindah halaman (sidebar & mobile nav).
+===================================================== */
+
+const PAGE_TITLES = {
+  dashboard: ["Dashboard", "Ringkasan aktivitas pertanian Anda"],
+  lahan: ["Lahan Saya", "Kelola seluruh lahan pertanian"],
+  pekerjaan: ["Pekerjaan", "Kelola aktivitas pekerjaan pertanian"],
+  panen: ["Hasil Panen", "Catatan hasil pertanian"],
+  marketplace: ["Marketplace", "Produk dan jasa pertanian"],
+  toko: ["Toko Saya", "Kelola produk dan jasa Anda"],
+  transaksi: ["Transaksi", "Riwayat transaksi dan pembayaran"],
+  notifikasi: ["Notifikasi", "Informasi terbaru dari PETANI"],
+  profil: ["Profil", "Kelola informasi akun"]
+};
+
+function showPage(page, clickedButton = null) {
+  document.querySelectorAll(".page").forEach(p => {
+    p.classList.remove("active");
+  });
+
+  const target = document.getElementById("page-" + page);
+  if (target) {
+    target.classList.add("active");
+  }
+
+  document.querySelectorAll(".nav-item").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  const navButton =
+    clickedButton || document.querySelector(`.nav-item[data-page="${page}"]`);
+
+  if (navButton) {
+    navButton.classList.add("active");
+  }
+
+  if (PAGE_TITLES[page]) {
+    document.getElementById("pageTitle").textContent = PAGE_TITLES[page][0];
+    document.getElementById("pageSubtitle").textContent = PAGE_TITLES[page][1];
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function mobileNav(page, button) {
+  showPage(page);
+  document.querySelectorAll(".mobile-nav button").forEach(btn => {
+    btn.classList.remove("active");
+  });
+  button.classList.add("active");
+}
+
+
+/* =====================================================
+   FIREBASE CONFIG — project: petani-8122b
+   Catatan: apiKey untuk aplikasi web Firebase memang
+   didesain untuk terlihat publik (bukan rahasia server).
+   Keamanan data yang sebenarnya diatur lewat Firestore
+   Security Rules (lihat firestore.rules), bukan dengan
+   menyembunyikan config ini.
+===================================================== */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDW5bG6SAF7vA1L38AtwzvULCcCGbRQKoY",
+  authDomain: "petani-8122b.firebaseapp.com",
+  projectId: "petani-8122b",
+  storageBucket: "petani-8122b.firebasestorage.app",
+  messagingSenderId: "491262390663",
+  appId: "1:491262390663:web:6caba3674585e47302a322"
+};
+
+
+/* =====================================================
+   AUTH — login, daftar, logout, & tampilan sesuai role.
+   Menggunakan Firebase Authentication (email/password)
+   dan profil user disimpan di Firestore: users/{uid}.
+===================================================== */
+
+let authMode = "login"; // "login" | "register"
+let selectedRole = null;
+
+function toggleAuthMode() {
+  authMode = authMode === "login" ? "register" : "login";
+  selectedRole = null;
+
+  const isRegister = authMode === "register";
+
+  document.getElementById("registerNameField").style.display = isRegister ? "block" : "none";
+  document.getElementById("registerRoleField").style.display = isRegister ? "grid" : "none";
+  document.getElementById("registerRoleHint").style.display = isRegister ? "block" : "none";
+  document.getElementById("authSubmitBtn").textContent = isRegister ? "Daftar" : "Masuk";
+
+  document.getElementById("authToggleNote").innerHTML = isRegister
+    ? 'Sudah punya akun? <a href="#" onclick="toggleAuthMode(); return false;">Masuk di sini</a>'
+    : 'Belum punya akun? <a href="#" onclick="toggleAuthMode(); return false;">Daftar di sini</a>';
+
+  document.getElementById("roleCardPengguna").classList.remove("selected");
+  document.getElementById("roleCardMitra").classList.remove("selected");
+  document.getElementById("roleCardKeduanya").classList.remove("selected");
+  hideAuthError();
+}
+
+function selectRegisterRole(role) {
+  selectedRole = role;
+  document.getElementById("roleCardPengguna").classList.toggle("selected", role === "pengguna");
+  document.getElementById("roleCardMitra").classList.toggle("selected", role === "mitra");
+  document.getElementById("roleCardKeduanya").classList.toggle("selected", role === "keduanya");
+}
+
+function showAuthError(message) {
+  const el = document.getElementById("authError");
+  el.textContent = message;
+  el.style.display = "block";
+}
+
+function hideAuthError() {
+  document.getElementById("authError").style.display = "none";
+}
+
+function handleAuthSubmit() {
+  hideAuthError();
+
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+
+  if (!email || !password) {
+    showAuthError("Email dan kata sandi wajib diisi.");
+    return;
+  }
+
+  const submitBtn = document.getElementById("authSubmitBtn");
+  submitBtn.disabled = true;
+
+  if (authMode === "register") {
+    const name = document.getElementById("authName").value.trim();
+
+    if (!name) {
+      showAuthError("Nama lengkap wajib diisi.");
+      submitBtn.disabled = false;
+      return;
+    }
+    if (!selectedRole) {
+      showAuthError("Pilih jenis akun terlebih dahulu.");
+      submitBtn.disabled = false;
+      return;
+    }
+
+    window.__registering = true;
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(function (cred) {
+        const roles = selectedRole === "keduanya"
+          ? { pengguna: true, mitra: true }
+          : { pengguna: selectedRole === "pengguna", mitra: selectedRole === "mitra" };
+        const activeRole = selectedRole === "mitra" ? "mitra" : "pengguna";
+        return db.collection("users").doc(cred.user.uid).set({
+          name: name,
+          email: email,
+          role: activeRole,
+          activeRole: activeRole,
+          roles: roles,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      })
+      .catch(function (err) {
+        showAuthError(describeAuthError(err));
+      })
+      .finally(function () {
+        window.__registering = false;
+        submitBtn.disabled = false;
+      });
+  } else {
+    auth.signInWithEmailAndPassword(email, password)
+      .catch(function (err) {
+        showAuthError(describeAuthError(err));
+      })
+      .finally(function () {
+        submitBtn.disabled = false;
+      });
+  }
+}
+
+/* ---------- LOGIN / DAFTAR DENGAN GOOGLE ---------- */
+let googleRole = null;
+window.__pendingGoogleUser = null;
+
+function setGoogleBusy(busy) {
+  const btn = document.getElementById("googleBtn");
+  if (!btn) return;
+  btn.disabled = busy;
+  document.getElementById("googleBtnText").textContent = busy ? "Menghubungkan ke Google…" : "Lanjutkan dengan Google";
+}
+
+function signInWithGoogle() {
+  hideAuthError();
+  setGoogleBusy(true);
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: "select_account" });
+
+  auth.signInWithPopup(provider)
+    .catch(function (err) {
+      if (err.code === "auth/popup-blocked" || err.code === "auth/operation-not-supported-in-this-environment") {
+        return auth.signInWithRedirect(provider);
+      }
+      if (err.code === "auth/popup-closed-by-user" || err.code === "auth/cancelled-popup-request") return;
+      showAuthError(describeAuthError(err));
+    })
+    .finally(function () { setGoogleBusy(false); });
+}
+
+window.__handleRedirect = function () {
+  auth.getRedirectResult().catch(function (err) {
+    if (err && err.code) showAuthError(describeAuthError(err));
+  });
+};
+
+function selectGoogleRole(role) {
+  googleRole = role;
+  document.getElementById("gRolePengguna").classList.toggle("selected", role === "pengguna");
+  document.getElementById("gRoleMitra").classList.toggle("selected", role === "mitra");
+  document.getElementById("gRoleKeduanya").classList.toggle("selected", role === "keduanya");
+}
+
+/* Akun Google baru: pilih jenis akun sekali saja */
+function showRoleSetup(user) {
+  window.__pendingGoogleUser = user;
+  googleRole = null;
+  ["gRolePengguna", "gRoleMitra", "gRoleKeduanya"].forEach(function (id) {
+    document.getElementById(id).classList.remove("selected");
+  });
+  const first = (user.displayName || user.email || "").split(" ")[0];
+  document.getElementById("setupGreeting").textContent = "Halo, " + first + "! 👋";
+  document.getElementById("loginStepForm").style.display = "none";
+  document.getElementById("loginStepRole").style.display = "block";
+  document.getElementById("loginScreen").style.display = "flex";
+  document.getElementById("app").style.display = "none";
+}
+
+function confirmRoleSetup() {
+  hideAuthError();
+  const user = window.__pendingGoogleUser || auth.currentUser;
+  if (!user) { showAuthError("Sesi login tidak ditemukan. Silakan masuk lagi."); return; }
+  if (!googleRole) { showAuthError("Pilih jenis akun terlebih dahulu."); return; }
+
+  const btn = document.getElementById("roleConfirmBtn");
+  btn.disabled = true;
+
+  const roles = googleRole === "keduanya"
+    ? { pengguna: true, mitra: true }
+    : { pengguna: googleRole === "pengguna", mitra: googleRole === "mitra" };
+  const activeRole = googleRole === "mitra" ? "mitra" : "pengguna";
+
+  db.collection("users").doc(user.uid).set({
+    name: user.displayName || (user.email || "Pengguna").split("@")[0],
+    email: user.email || "",
+    photoURL: user.photoURL || "",
+    role: activeRole,
+    activeRole: activeRole,
+    roles: roles,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(function () {
+    window.__pendingGoogleUser = null;
+    window.loadUserProfile(user);
+  }).catch(function (err) {
+    showAuthError("Gagal menyimpan akun: " + err.message);
+  }).finally(function () {
+    btn.disabled = false;
+  });
+}
+
+function normalizedRoles(profile) {
+  if (profile.roles && typeof profile.roles === "object") {
+    return { pengguna: !!profile.roles.pengguna, mitra: !!profile.roles.mitra };
+  }
+  const legacy = profile.role === "mitra" ? "mitra" : "pengguna";
+  return { pengguna: legacy === "pengguna", mitra: legacy === "mitra" };
+}
+
+function availableRoles(profile) {
+  const r = normalizedRoles(profile);
+  return Object.keys(r).filter(k => r[k]);
+}
+
+function setRoleInterface(role) {
+  const profile = window.__petaniProfile || {};
+  const roles = normalizedRoles(profile);
+  if (!roles[role]) return;
+
+  // Hentikan listener lama sebelum mengganti konteks peran.
+  if (window.__jobUnsub) { window.__jobUnsub(); window.__jobUnsub = null; }
+  if (window.__farmUnsub && role === "mitra") { window.__farmUnsub(); window.__farmUnsub = null; }
+
+  currentRole = role;
+  profile.activeRole = role;
+  profile.role = role;
+  window.__petaniProfile = profile;
+
+  const btn = document.getElementById("roleSwitchBtn");
+  if (btn) { btn.style.display = (roles.pengguna && roles.mitra) ? "inline-flex" : "none"; btn.title = role === "pengguna" ? "Beralih ke Pekerja / Mitra" : "Beralih ke Pemilik Lahan"; }
+
+  // Kembalikan elemen menu ke mode yang sesuai setiap kali berpindah peran.
+  if (role === "mitra") activateMitraMode();
+  else activatePenggunaMode();
+
+  updateUserInterface();
+  loadJobs();
+  loadProducts();
+  if (role === "pengguna") { loadFarms(); populateJobFarms(); }
+}
+
+function openRoleSwitcher() {
+  const profile = window.__petaniProfile || {};
+  const roles = normalizedRoles(profile);
+  if (!(roles.pengguna && roles.mitra)) {
+    showToast("Akun ini baru memiliki satu peran.");
+    return;
+  }
+
+  // Tombol berfungsi sebagai toggle langsung: lebih stabil daripada prompt
+  // dan tidak bergantung pada urutan pilihan.
+  const nextRole = currentRole === "pengguna" ? "mitra" : "pengguna";
+  switchActiveRole(nextRole);
+}
+
+function switchActiveRole(role) {
+  if (!currentUserId || !window.__petaniProfile) {
+    showToast("Sesi pengguna belum siap.");
+    return;
+  }
+  const roles = normalizedRoles(window.__petaniProfile);
+  if (!roles[role]) {
+    showToast("Peran tersebut belum aktif pada akun ini.");
+    return;
+  }
+
+  const btn = document.getElementById("roleSwitchBtn");
+  if (btn) btn.disabled = true;
+
+  db.collection("users").doc(currentUserId).update({
+    activeRole: role,
+    roles: roles
+  }).then(() => {
+    window.__petaniProfile.activeRole = role;
+    window.__petaniProfile.role = role;
+    window.__petaniProfile.roles = roles;
+    setRoleInterface(role);
+    showPage("dashboard");
+    showToast("Mode diganti menjadi " + (role === "pengguna" ? "Pemilik Lahan" : "Pekerja / Mitra") + ".");
+  }).catch(e => {
+    showToast("Gagal mengganti peran: " + e.message);
+  }).finally(() => {
+    if (btn) btn.disabled = false;
+  });
+}
+
+function activatePenggunaMode() {
+  const lahan = document.querySelector('[data-page="lahan"]');
+  if (lahan) lahan.style.display = "flex";
+  const pekerjaan = document.querySelector('[data-page="pekerjaan"]');
+  if (pekerjaan) pekerjaan.innerHTML = '<span class="nav-icon">📋</span> Pekerjaan';
+  const panen = document.querySelector('[data-page="panen"]');
+  if (panen) panen.innerHTML = '<span class="nav-icon">🌾</span> Hasil Panen';
+  const transaksi = document.querySelector('[data-page="transaksi"]');
+  if (transaksi) transaksi.innerHTML = '<span class="nav-icon">💰</span> Transaksi';
+  const pg = document.getElementById("page-pekerjaan");
+  if (pg) {
+    const p = pg.querySelector("p"); if (p) p.textContent = "Kelola aktivitas pekerjaan pertanian.";
+    const b = pg.querySelector(".btn");
+    if (b) { b.textContent = "+ Buat Pekerjaan"; b.onclick = function(){ populateJobFarms(); openModal("modalPekerjaan"); }; }
+  }
+  const pp = document.getElementById("page-panen");
+  if (pp) { const h=pp.querySelector("h2"), p=pp.querySelector("p"); if(h)h.textContent="Hasil Panen"; if(p)p.textContent="Catatan hasil panen dan produksi lahan."; }
+}
+
+function describeAuthError(err) {
+  switch (err.code) {
+    case "auth/email-already-in-use":
+      return "Email ini sudah terdaftar. Silakan masuk.";
+    case "auth/invalid-email":
+      return "Format email tidak valid.";
+    case "auth/weak-password":
+      return "Kata sandi minimal 6 karakter.";
+    case "auth/user-not-found":
+    case "auth/wrong-password":
+    case "auth/invalid-credential":
+      return "Email atau kata sandi salah.";
+    case "auth/unauthorized-domain":
+      return "Domain website ini belum diizinkan di Firebase (Authentication > Settings > Authorized domains).";
+    case "auth/operation-not-allowed":
+      return "Login Google belum diaktifkan di Firebase Console (Authentication > Sign-in method > Google).";
+    case "auth/network-request-failed":
+      return "Koneksi internet bermasalah. Coba lagi.";
+    case "auth/account-exists-with-different-credential":
+      return "Email ini sudah terdaftar dengan metode login lain.";
+    default:
+      return "Terjadi kesalahan: " + (err.message || err.code);
+  }
+}
+
+function logout() {
+  window.__pendingGoogleUser = null;
+  auth.signOut();
+}
+
+function confirmLogout() {
+  if (confirm("Keluar dari akun PETANI?")) logout();
+}
+
+function showLoginScreen() {
+  document.getElementById("loginScreen").style.display = "flex";
+  document.getElementById("app").style.display = "none";
+  document.getElementById("authEmail").value = "";
+  document.getElementById("authPassword").value = "";
+  document.getElementById("loginStepForm").style.display = "block";
+  document.getElementById("loginStepRole").style.display = "none";
+  hideAuthError();
+  setGoogleBusy(false);
+}
+
+function loadUserProfile(user) {
+  db.collection("users").doc(user.uid).get()
+    .then(function (doc) {
+      if (!doc.exists) {
+        showRoleSetup(user);
+        return;
+      }
+
+      const profile = doc.data();
+      currentRole = profile.role;
+      currentUserId = user.uid;
+
+      userData[currentRole] = {
+        name: profile.name,
+        initials: initialsOf(profile.name),
+        role: currentRole === "pengguna" ? "Petani Pengguna" : "Petani Mitra"
+      };
+
+      document.getElementById("loginScreen").style.display = "none";
+      document.getElementById("app").style.display = "block";
+
+      updateUserInterface();
+
+      if (currentRole === "mitra") {
+        activateMitraMode();
+      }
+
+      loadFarms();
+    })
+    .catch(function (err) {
+      showToast("Gagal memuat profil: " + err.message);
+    });
+}
+
+function initialsOf(name) {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(function (w) { return w[0].toUpperCase(); })
+    .join("");
+}
+
+function updateUserInterface() {
+  const profile = window.__petaniProfile || {};
+  const baseName = profile.name || (userData[currentRole] && userData[currentRole].name) || "Pengguna";
+  userData[currentRole] = {
+    name: baseName,
+    initials: initialsOf(baseName),
+    role: currentRole === "pengguna" ? "Petani Pengguna" : "Petani Mitra",
+    storeName: profile.storeName || ""
+  };
+  const user = userData[currentRole];
+
+  document.getElementById("topName").textContent = user.name;
+  document.getElementById("topAvatar").textContent = user.initials;
+
+  document.getElementById("profileName").textContent = user.name;
+  document.getElementById("profileRole").textContent = user.role;
+  document.getElementById("profileAvatar").textContent = user.initials;
+
+  document.getElementById("profileNameInput").value = user.name;
+
+  document.getElementById("welcomeTitle").textContent =
+    `Selamat datang, ${user.name.split(" ")[0]}! 👋`;
+
+  document.getElementById("welcomeText").textContent = currentRole === "mitra"
+    ? "Temukan pekerjaan pertanian di sekitar Anda, kelola pekerjaan aktif, dan pantau pendapatan."
+    : "Kelola lahan, pekerjaan, hasil panen, dan aktivitas pertanian Anda.";
+}
+
+function activateMitraMode() {
+  document.querySelector('[data-page="lahan"]').style.display = "none";
+
+  document.querySelector('[data-page="pekerjaan"]').innerHTML =
+    '<span class="nav-icon">📋</span> Pekerjaan Tersedia';
+
+  document.querySelector('[data-page="panen"]').innerHTML =
+    '<span class="nav-icon">💼</span> Pekerjaan Saya';
+
+  document.querySelector('[data-page="transaksi"]').innerHTML =
+    '<span class="nav-icon">💰</span> Pendapatan';
+
+  document.getElementById("page-pekerjaan").querySelector("p").textContent =
+    "Temukan pekerjaan pertanian di sekitar Anda.";
+
+  const headerButton = document
+    .getElementById("page-pekerjaan")
+    .querySelector(".btn");
+
+  headerButton.textContent = "📍 Cari Pekerjaan";
+  headerButton.onclick = function () {
+    showToast("Mencari pekerjaan di sekitar lokasi Anda...");
+  };
+
+  document.getElementById("page-panen").querySelector("h2").textContent =
+    "Pekerjaan Saya";
+
+  document.getElementById("page-panen").querySelector("p").textContent =
+    "Pekerjaan yang sedang dan telah Anda selesaikan.";
+}
+
+
+/* =====================================================
+   FORMS — Lahan (sudah terhubung Firestore),
+   Pekerjaan, Panen, Profil (masih lokal — giliran
+   berikutnya, mengikuti pola yang sama seperti Lahan).
+===================================================== */
+
+const FARM_ICONS = {
+  Sawit: "🌴", Padi: "🌾", Jagung: "🌽", Kopi: "☕",
+  Kakao: "🍫", Karet: "🌳", Sayuran: "🥬", "Buah-buahan": "🍉", Lainnya: "🌱"
+};
+
+function addFarm() {
+  const name = document.getElementById("farmName").value.trim();
+  const commodity = document.getElementById("farmCommodity").value;
+  const size = document.getElementById("farmSize").value;
+  const unit = document.getElementById("farmUnit").value;
+  const location = document.getElementById("farmLocation").value.trim();
+
+  if (!name) {
+    showToast("Nama lahan belum diisi.");
+    return;
+  }
+
+  db.collection("farms").add({
+    ownerId: currentUserId,
+    name: name,
+    commodity: commodity,
+    size: size || null,
+    unit: unit,
+    location: location || null,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(function () {
+    closeModal("modalLahan");
+    document.getElementById("farmName").value = "";
+    document.getElementById("farmSize").value = "";
+    document.getElementById("farmLocation").value = "";
+    showToast("Lahan berhasil ditambahkan.");
+  })
+  .catch(function (err) {
+    showToast("Gagal menambah lahan: " + err.message);
+  });
+}
+
+function loadFarms() {
+  if (currentRole !== "pengguna" || !currentUserId) return;
+
+  db.collection("farms")
+    .where("ownerId", "==", currentUserId)
+    .orderBy("createdAt", "desc")
+    .onSnapshot(renderFarms, function (err) {
+      showToast("Gagal memuat lahan: " + err.message);
+    });
+}
+
+function renderFarms(snapshot) {
+  const grid = document.getElementById("farmGrid");
+  if (!grid) return;
+
+  if (snapshot.empty) {
+    grid.innerHTML = '<div class="empty-state">Belum ada lahan. Klik "+ Tambah Lahan" untuk menambahkan yang pertama.</div>';
+    return;
+  }
+
+  grid.innerHTML = snapshot.docs.map(function (doc) {
+    const farm = doc.data();
+    const icon = FARM_ICONS[farm.commodity] || "🌱";
+
+    return `<div class="farm-card">
+      <div class="farm-photo">${icon}</div>
+      <div class="farm-content">
+        <h3>${escapeHtml(farm.name)}</h3>
+        <div class="farm-location">📍 ${escapeHtml(farm.location || "Lokasi belum diisi")}</div>
+        <div class="farm-info">
+          <div><small>Komoditas</small><strong>${escapeHtml(farm.commodity || "-")}</strong></div>
+          <div><small>Luas</small><strong>${farm.size ? farm.size + " " + (farm.unit === "Meter persegi" ? "m²" : "ha") : "-"}</strong></div>
+          <div><small>Status</small><strong>Aktif</strong></div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function createJob() {
+  closeModal("modalPekerjaan");
+  showToast(
+    currentRole === "mitra"
+      ? "Pencarian pekerjaan diperbarui."
+      : "Pekerjaan berhasil dipublikasikan."
+  );
+}
+
+function saveHarvest() {
+  closeModal("modalPanen");
+  showToast("Pencatatan panen belum tersimpan: fitur ini menyusul (akan memakai Firestore).");
+}
+
+function saveProfile() {
+  const newName = document.getElementById("profileNameInput").value;
+
+  if (!newName) {
+    showToast("Nama belum diisi.");
+    return;
+  }
+
+  document.getElementById("profileName").textContent = newName;
+  document.getElementById("topName").textContent = newName;
+
+  showToast("Profil berhasil diperbarui.");
+}
+
+
+/* =====================================================
+   MARKETPLACE — tab produk/jasa, filter, keranjang, toko.
+   TODO tahap Firebase:
+   - Produk/jasa dibaca dari Firestore collection "products"
+     & "services" (bukan card statis di HTML).
+   - Cart tetap boleh di localStorage untuk guest, tapi
+     saat checkout ditulis ke collection "orders".
+   - Field kategori/harga/foto produk mengikuti skema yang
+     sama supaya gampang ditambah kategori baru nanti.
+===================================================== */
+
+function marketTab(tab) {
+  document.getElementById("marketProduk").style.display =
+    tab === "produk" ? "block" : "none";
+  document.getElementById("marketJasa").style.display =
+    tab === "jasa" ? "block" : "none";
+  document.getElementById("tabProduk").classList.toggle("active", tab === "produk");
+  document.getElementById("tabJasa").classList.toggle("active", tab === "jasa");
+}
+
+function filterCategory(category) {
+  marketCategory = category;
+  marketTab(category === "jasa" ? "jasa" : "produk");
+  document.querySelectorAll(".product-card").forEach(card => {
+    const match =
+      category === "all" ||
+      category === "jasa" ||
+      card.dataset.category === category;
+    card.style.display = match ? "block" : "none";
+  });
+}
+
+function filterMarketplace() {
+  const q = (document.getElementById("marketSearch").value || "").toLowerCase();
+  document.querySelectorAll(".product-card").forEach(card => {
+    const text = (card.dataset.search || "").toLowerCase();
+    const categoryMatch =
+      marketCategory === "all" ||
+      marketCategory === "jasa" ||
+      card.dataset.category === marketCategory;
+    card.style.display = categoryMatch && text.includes(q) ? "block" : "none";
+  });
+}
+
+function addToCart(name, price, icon) {
+  const existing = cart.find(item => item.name === name);
+  if (existing) existing.qty++;
+  else cart.push({ name, price, icon, qty: 1 });
+
+  localStorage.setItem("petaniCart", JSON.stringify(cart));
+  updateCartCount();
+  showToast(name + " ditambahkan ke keranjang.");
+}
+
+function updateCartCount() {
+  const count = cart.reduce((sum, item) => sum + item.qty, 0);
+  const el = document.getElementById("cartCount");
+  if (el) el.textContent = count;
+}
+
+function formatRupiah(n) {
+  return "Rp" + Number(n).toLocaleString("id-ID");
+}
+
+function openCart() {
+  renderCart();
+  openModal("modalCart");
+}
+
+function renderCart() {
+  const list = document.getElementById("cartList");
+  const totalEl = document.getElementById("cartTotal");
+
+  if (!cart.length) {
+    list.innerHTML =
+      '<div style="text-align:center;padding:25px;color:#6b7280;font-size:12px">🛒<br><br>Keranjang masih kosong.</div>';
+    totalEl.textContent = "Rp0";
+    return;
+  }
+
+  let total = 0;
+  list.innerHTML = cart
+    .map((item, i) => {
+      total += item.price * item.qty;
+      return `<div class="cart-item"><div class="cart-thumb">${item.icon}</div><div class="cart-item-main"><strong>${item.name}</strong><small>${formatRupiah(item.price)} × ${item.qty}</small></div><button class="btn btn-danger" onclick="removeCart(${i})">Hapus</button></div>`;
+    })
+    .join("");
+
+  totalEl.textContent = formatRupiah(total);
+}
+
+function removeCart(index) {
+  cart.splice(index, 1);
+  localStorage.setItem("petaniCart", JSON.stringify(cart));
+  updateCartCount();
+  renderCart();
+}
+
+function checkoutCart() {
+  if (!cart.length) {
+    showToast("Keranjang masih kosong.");
+    return;
+  }
+  closeModal("modalCart");
+  showToast("Pesanan dibuat. Lanjutkan ke transaksi untuk pembayaran.");
+}
+
+function createStore() {
+  const name = document.getElementById("storeName").value.trim();
+  if (!name) {
+    showToast("Nama toko belum diisi.");
+    return;
+  }
+  closeModal("modalToko");
+  showToast("Toko " + name + " berhasil dibuat.");
+  showPage("toko");
+}
+
+function saveProduct() {
+  const name = document.getElementById("newProductName").value.trim();
+  if (!name) {
+    showToast("Nama produk belum diisi.");
+    return;
+  }
+  closeModal("modalProduk");
+  document.getElementById("newProductName").value = "";
+  showToast("Produk berhasil dipublikasikan.");
+}
+
+function saveService() {
+  closeModal("modalJasa");
+  showToast("Fitur jasa belum aktif: menyusul (akan memakai Firestore).");
+}
+
+
+/* =====================================================
+   FIREBASE INIT — inisialisasi app, auth, firestore,
+   dan listener status login (menggantikan pengecekan
+   localStorage yang lama).
+===================================================== */
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+window.__handleRedirect();
+
+auth.onAuthStateChanged(function (user) {
+  if (user) {
+    loadUserProfile(user);
+  } else {
+    showLoginScreen();
+  }
+});
+
+
+/* =====================================================
+   MAIN — dijalankan saat halaman dibuka.
+   Logika login/logout sekarang ditangani oleh
+   firebase-init.js (auth.onAuthStateChanged), jadi
+   di sini cukup siapkan bagian yang tidak butuh login.
+===================================================== */
+
+updateCartCount();
+
+
+/* =====================================================
+   PETANI CLOUD — INTEGRASI DATA / CRUD
+   Layer ini sengaja ditambahkan tanpa mengubah desain.
+===================================================== */
+(function(){
+  const oldLoadFarms = window.loadFarms;
+
+  window.loadFarms = function(){
+    if (!currentUserId || currentRole !== "pengguna") return;
+    if (window.__farmUnsub) window.__farmUnsub();
+    window.__farmUnsub = db.collection("farms").where("ownerId","==",currentUserId)
+      .onSnapshot(function(s){
+        renderFarmsFixed(s);
+        const el=document.getElementById("statFarmCount"); if(el) el.textContent=s.size;
+      },function(e){showToast("Gagal memuat lahan: "+e.message);});
+  };
+
+  function esc(v){const d=document.createElement("div");d.textContent=v==null?"":String(v);return d.innerHTML;}
+  function num(v){const n=Number(v);return Number.isFinite(n)?n:0;}
+
+  function renderFarmsFixed(s){
+    const grid=document.getElementById("farmGrid"); if(!grid)return;
+    if(s.empty){grid.innerHTML='<div class="empty-state">Belum ada lahan. Klik "+ Tambah Lahan" untuk menambahkan yang pertama.</div>';return;}
+    const farms=s.docs.map(d=>({id:d.id,...d.data()}));
+    const ownerJobsPromise = db.collection("jobs").where("ownerId","==",currentUserId).get();
+    ownerJobsPromise.then(js=>{
+      const jobs=js.docs.map(d=>d.data());
+      grid.innerHTML=farms.map(f=>{
+        const related=jobs.filter(j=>j.farmId===f.id);
+        const progress=related.length ? Math.round(related.reduce((sum,j)=>sum+num(j.progress),0)/related.length) : 0;
+        const active=related.filter(j=>!["Dibatalkan","Selesai"].includes(j.status));
+        const progressText=active.length ? `${active.length} pekerjaan aktif • ${active.map(j=>j.type||"Pekerjaan").slice(0,2).join(", ")}` : (related.length ? "Tidak ada pekerjaan aktif" : "Belum ada pekerjaan aktif");
+        return {f,progress,progressText};
+      }).map(x=>{ const f=x.f; const progress=x.progress; const progressText=x.progressText;
+      const icon=(typeof FARM_ICONS!=="undefined"&&FARM_ICONS[f.commodity])||"🌱";
+      const p=Math.max(0,Math.min(100,progress));
+      return `<div class="farm-card">
+        <div class="farm-photo">${icon}</div><div class="farm-content">
+        <h3>${esc(f.name)}</h3><div class="farm-location">📍 ${esc(f.location||"Lokasi belum diisi")}</div>
+        <div class="farm-info"><div><small>Komoditas</small><strong>${esc(f.commodity||"-")}</strong></div>
+        <div><small>Luas</small><strong>${esc(f.size||"-")} ${f.size?(f.unit==="Meter persegi"?"m²":"ha"):""}</strong></div>
+        <div><small>Status</small><strong>${esc(f.status||"Aktif")}</strong></div></div>
+        <div class="progress-wrap"><div class="progress-label"><span>Progres pekerjaan</span><span>${p}%</span></div>
+        <div class="progress-bar"><span style="width:${p}%"></span></div><div class="owner-note">${esc(progressText)}</div></div>
+        <div class="owner-actions"><button class="btn btn-outline" onclick="showPage('pekerjaan')">📋 Pekerjaan</button>
+        <button class="btn btn-danger" onclick="deleteFarmFixed('${f.id}')">Hapus</button></div></div></div>`;
+    }).join("");
+    });
+  }
+
+  window.deleteFarmFixed=function(id){
+    if(!confirm("Hapus lahan ini?"))return;
+    db.collection("farms").doc(id).delete().then(()=>showToast("Lahan dihapus.")).catch(e=>showToast("Gagal menghapus lahan: "+e.message));
+  };
+
+  // Replace the no-op job creator with real Firestore storage.
+  function populateJobFarms(selectedId){
+    const sel=document.getElementById("jobFarmId");
+    if(!sel || !currentUserId || currentRole!=="pengguna")return Promise.resolve();
+    return db.collection("farms").where("ownerId","==",currentUserId).get().then(s=>{
+      const current=(selectedId!==undefined)?selectedId:sel.value;
+      sel.innerHTML='<option value="">Pilih lahan...</option>'+s.docs.map(d=>{
+        const f=d.data(); return `<option value="${d.id}" data-name="${esc(f.name)}" data-commodity="${esc(f.commodity||"Sawit")}">${esc(f.name)} — ${esc(f.commodity||"-")}</option>`;
+      }).join("");
+      if(current)sel.value=current;
+    }).catch(e=>showToast("Gagal memuat daftar lahan: "+e.message));
+  }
+  // Dipanggil juga dari luar blok ini (setRoleInterface / tombol "+ Buat Pekerjaan"),
+  // jadi harus diekspor ke window supaya tidak "is not defined".
+  window.populateJobFarms=populateJobFarms;
+
+  window.createJob=function(){
+    if(!currentUserId){showToast("Sesi pengguna belum siap.");return;}
+    const v=id=>document.getElementById(id)?.value||"";
+    if(!v("jobStartDate")||!v("jobLocation")){showToast("Tanggal mulai dan lokasi wajib diisi.");return;}
+    const farmSel=document.getElementById("jobFarmId");
+    const farmOpt=farmSel?.options[farmSel.selectedIndex];
+    const farmId=farmSel?.value||"";
+    const farmName=farmOpt?.dataset.name||"";
+    const farmCommodity=farmOpt?.dataset.commodity||v("jobCommodity");
+    db.collection("jobs").add({
+      ownerId:currentUserId, ownerName:(userData[currentRole]||{}).name||"",
+      farmId, farmName, commodity:farmCommodity, type:v("jobType"), startDate:v("jobStartDate"),
+      duration:v("jobDuration"), workers:v("jobWorkers"), wage:v("jobWage"),
+      location:v("jobLocation"), description:v("jobDescription"), status:"Mencari Mitra",
+      progress:0, createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+    }).then(()=>{
+      closeModal("modalPekerjaan"); resetJobButton(); showToast("Pekerjaan berhasil dipublikasikan.");
+    }).catch(e=>showToast("Gagal membuat pekerjaan: "+e.message));
+  };
+
+  function resetJobButton(){
+    const b=document.querySelector('#modalPekerjaan .btn.btn-primary');
+    if(b){b.textContent="Publikasikan Pekerjaan";b.onclick=window.createJob;}
+  }
+  window.resetJobModal=resetJobButton;
+
+  window.loadJobs=function(){
+    if(!currentUserId)return;
+    if(window.__jobUnsub)window.__jobUnsub();
+    let q=db.collection("jobs");
+    if(currentRole==="pengguna")q=q.where("ownerId","==",currentUserId);
+    window.__jobUnsub=q.onSnapshot(renderJobsFixed,e=>showToast("Gagal memuat pekerjaan: "+e.message));
+  };
+
+  function renderJobsFixed(s){
+    const grid=document.getElementById("jobGrid"); if(!grid)return;
+    let jobs=s.docs.map(d=>({id:d.id,...d.data()}));
+    if(currentRole==="mitra") jobs=jobs.filter(j=>!["Dibatalkan","Selesai"].includes(j.status));
+    jobs.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
+    const active=jobs.filter(j=>!["Dibatalkan","Selesai"].includes(j.status)).length;
+    const stat=document.getElementById("statJobCount"); if(stat)stat.textContent=active;
+
+    const summary=document.getElementById("dashboardJobSummary");
+    if(summary)summary.innerHTML=jobs.slice(0,4).map(j=>`<div class="list-item"><div class="list-main"><div class="list-icon">📋</div><div><strong>${esc(j.type||"Pekerjaan")}</strong><small>${esc(j.location||"Lahan")} • ${esc(j.status||"-")}</small></div></div><span class="badge info">${num(j.progress)}%</span></div>`).join("")||'<div class="empty-state">Belum ada pekerjaan aktif.</div>';
+
+    if(!jobs.length){
+      grid.innerHTML=currentRole==="mitra"
+        ? '<div class="empty-state">Belum ada pekerjaan tersedia untuk diambil.</div>'
+        : '<div class="empty-state">Belum ada pekerjaan. Klik "+ Buat Pekerjaan" untuk menambahkan.</div>';
+      return;
+    }
+
+    grid.innerHTML=jobs.map(j=>{
+      const p=Math.max(0,Math.min(100,num(j.progress)));
+      const badge=j.status==="Berjalan"?"info":j.status==="Selesai"?"success":j.status==="Dibatalkan"?"danger":j.status==="Menunggu"?"warning":"warning";
+      const own=currentRole==="pengguna"&&j.ownerId===currentUserId;
+      const workerIds=Array.isArray(j.workerIds)?j.workerIds:(j.workerId?[j.workerId]:[]);
+      const isWorker=workerIds.includes(currentUserId);
+      const maxWorkers=Math.max(1,num(j.workers)||1);
+      const workerCount=workerIds.length;
+      let workerActions="";
+
+      if(currentRole==="mitra") {
+        if(!isWorker && workerCount < maxWorkers && !["Selesai","Dibatalkan"].includes(j.status)) {
+          workerActions=`<div class="owner-actions"><button class="btn btn-primary" onclick="takeJobFixed('${j.id}')">Ambil Pekerjaan</button></div>`;
+        } else if(isWorker) {
+          workerActions=`<div class="owner-actions">
+            <button class="btn btn-primary" onclick="processJobFixed('${j.id}')" ${j.status==="Berjalan"?"disabled":""}>▶ Proses</button>
+            <button class="btn btn-outline" onclick="waitJobFixed('${j.id}')" ${j.status==="Menunggu"?"disabled":""}>⏸ Tunggu</button>
+          </div>`;
+        }
+      }
+
+      return `<div class="job-card"><div class="job-top"><div class="job-title"><div class="job-icon">📋</div><div><h3>${esc(j.type||"Pekerjaan")}</h3><p>${esc(j.location||"Lahan")}</p></div></div><span class="badge ${badge}">${esc(j.status||"Mencari Mitra")}</span></div>
+      <div class="job-details"><div class="job-detail"><span>📅 Tanggal</span>${esc(j.startDate||"-")}</div><div class="job-detail"><span>👥 Pekerja</span>${workerCount}/${maxWorkers} orang</div><div class="job-detail"><span>📍 Lokasi</span>${esc(j.location||"-")}</div><div class="job-detail"><span>⏱️ Durasi</span>${esc(j.duration||"-")}</div></div>
+      <div class="job-bottom"><span class="salary">${esc(j.wage||"-")}</span><span style="font-size:10px;color:var(--muted)">Progres ${p}%</span></div>
+      <div class="progress-wrap"><div class="progress-bar"><span style="width:${p}%"></span></div></div>
+      ${own?`<div class="owner-actions"><button class="btn btn-outline" onclick="editJobFixed('${j.id}')">Edit</button><button class="btn btn-danger" onclick="deleteJobFixed('${j.id}')">Hapus</button>${!["Dibatalkan","Selesai"].includes(j.status)?`<button class="btn btn-outline" onclick="cancelJobFixed('${j.id}')">Urungkan</button>`:""}</div>`:""}
+      ${workerActions}</div>`;
+    }).join("");
+  }
+
+  // Alur pekerja: ambil -> proses / tunggu. Semua perubahan langsung disimpan
+  // ke dokumen pekerjaan sehingga pemilik lahan melihat status yang sama secara realtime.
+  window.takeJobFixed=function(id){
+    if(currentRole!=="mitra"||!currentUserId)return;
+    const ref=db.collection("jobs").doc(id);
+    ref.get().then(d=>{
+      if(!d.exists)throw new Error("Pekerjaan tidak ditemukan.");
+      const j=d.data();
+      if(["Selesai","Dibatalkan"].includes(j.status))throw new Error("Pekerjaan sudah ditutup.");
+      const ids=Array.isArray(j.workerIds)?j.workerIds:(j.workerId?[j.workerId]:[]);
+      const max=Math.max(1,num(j.workers)||1);
+      if(ids.includes(currentUserId)){showToast("Pekerjaan ini sudah Anda ambil.");return;}
+      if(ids.length>=max){showToast("Kuota pekerja untuk pekerjaan ini sudah penuh.");return;}
+      const name=(userData.mitra||{}).name||((window.__petaniProfile||{}).name)||"Pekerja";
+      return ref.update({
+        workerIds:firebase.firestore.FieldValue.arrayUnion(currentUserId),
+        workerNames:firebase.firestore.FieldValue.arrayUnion(name),
+        status:"Diambil",
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }).then(r=>{if(r!==undefined)showToast("Pekerjaan berhasil diambil.");}).catch(e=>showToast("Gagal mengambil pekerjaan: "+e.message));
+  };
+
+  window.processJobFixed=function(id){
+    if(currentRole!=="mitra"||!currentUserId)return;
+    const ref=db.collection("jobs").doc(id);
+    ref.get().then(d=>{
+      if(!d.exists)throw new Error("Pekerjaan tidak ditemukan.");
+      const j=d.data(),ids=Array.isArray(j.workerIds)?j.workerIds:(j.workerId?[j.workerId]:[]);
+      if(!ids.includes(currentUserId))throw new Error("Ambil pekerjaan terlebih dahulu.");
+      return ref.update({status:"Berjalan",progress:Math.max(25,num(j.progress)),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+    }).then(()=>showToast("Pekerjaan mulai diproses.")).catch(e=>showToast("Gagal memproses pekerjaan: "+e.message));
+  };
+
+  window.waitJobFixed=function(id){
+    if(currentRole!=="mitra"||!currentUserId)return;
+    const ref=db.collection("jobs").doc(id);
+    ref.get().then(d=>{
+      if(!d.exists)throw new Error("Pekerjaan tidak ditemukan.");
+      const j=d.data(),ids=Array.isArray(j.workerIds)?j.workerIds:(j.workerId?[j.workerId]:[]);
+      if(!ids.includes(currentUserId))throw new Error("Ambil pekerjaan terlebih dahulu.");
+      return ref.update({status:"Menunggu",updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+    }).then(()=>showToast("Status pekerjaan diubah menjadi menunggu.")).catch(e=>showToast("Gagal mengubah status: "+e.message));
   };
 
 
-  /* =====================================================
-     LOGIN
-  ===================================================== */
+  window.deleteJobFixed=id=>{if(!confirm("Hapus pekerjaan ini?"))return;db.collection("jobs").doc(id).delete().then(()=>showToast("Pekerjaan dihapus.")).catch(e=>showToast("Gagal menghapus pekerjaan: "+e.message));};
+  window.cancelJobFixed=id=>db.collection("jobs").doc(id).update({status:"Dibatalkan",updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>showToast("Pekerjaan diurungkan.")).catch(e=>showToast("Gagal mengurungkan pekerjaan: "+e.message));
 
-  function loginAs(role) {
-
-    currentRole = role;
-
-    localStorage.setItem("petaniRole", role);
-
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("app").style.display = "block";
-
-    updateUserInterface();
-
-    if (role === "mitra") {
-      activateMitraMode();
-    }
-
-  }
-
-
-  function updateUserInterface() {
-
-    const user = userData[currentRole];
-
-    document.getElementById("topName").textContent = user.name;
-    document.getElementById("topAvatar").textContent = user.initials;
-
-    document.getElementById("profileName").textContent = user.name;
-    document.getElementById("profileRole").textContent = user.role;
-    document.getElementById("profileAvatar").textContent = user.initials;
-
-    document.getElementById("profileNameInput").value = user.name;
-
-    document.getElementById("welcomeTitle").textContent =
-      `Selamat datang, ${user.name.split(" ")[0]}! 👋`;
-
-    if (currentRole === "mitra") {
-
-      document.getElementById("welcomeText").textContent =
-        "Temukan pekerjaan pertanian di sekitar Anda, kelola pekerjaan aktif, dan pantau pendapatan.";
-
-    }
-
-  }
-
-
-  /* =====================================================
-     MITRA MODE
-  ===================================================== */
-
-  function activateMitraMode() {
-
-    document.querySelector('[data-page="lahan"]').style.display = "none";
-
-    document.querySelector('[data-page="pekerjaan"]').innerHTML =
-      '<span class="nav-icon">📋</span> Pekerjaan Tersedia';
-
-    document.querySelector('[data-page="panen"]').innerHTML =
-      '<span class="nav-icon">💼</span> Pekerjaan Saya';
-
-    document.querySelector('[data-page="transaksi"]').innerHTML =
-      '<span class="nav-icon">💰</span> Pendapatan';
-
-    document.getElementById("page-pekerjaan").querySelector("p").textContent =
-      "Temukan pekerjaan pertanian di sekitar Anda.";
-
-    const headerButton =
-      document.getElementById("page-pekerjaan").querySelector(".btn");
-
-    headerButton.textContent = "📍 Cari Pekerjaan";
-
-    headerButton.onclick = function() {
-      showToast("Mencari pekerjaan di sekitar lokasi Anda...");
-    };
-
-    document.getElementById("page-panen").querySelector("h2").textContent =
-      "Pekerjaan Saya";
-
-    document.getElementById("page-panen").querySelector("p").textContent =
-      "Pekerjaan yang sedang dan telah Anda selesaikan.";
-
-  }
-
-
-  /* =====================================================
-     LOGOUT
-  ===================================================== */
-
-  function logout() {
-
-    localStorage.removeItem("petaniRole");
-
-    location.reload();
-
-  }
-
-
-  /* =====================================================
-     NAVIGATION
-  ===================================================== */
-
-  function showPage(page, clickedButton = null) {
-
-    document.querySelectorAll(".page").forEach(p => {
-      p.classList.remove("active");
+  window.editJobFixed=function(id){
+    db.collection("jobs").doc(id).get().then(d=>{
+      if(!d.exists)return;const j=d.data(),v=(id,val)=>{const e=document.getElementById(id);if(e)e.value=val||""};
+      v("jobCommodity",j.commodity);v("jobType",j.type);v("jobStartDate",j.startDate);v("jobDuration",j.duration);v("jobWorkers",j.workers);v("jobWage",j.wage);v("jobLocation",j.location);v("jobDescription",j.description);
+      populateJobFarms(j.farmId||"");
+      const b=document.querySelector('#modalPekerjaan .btn.btn-primary');b.textContent="Simpan Perubahan";b.onclick=()=>updateJobFixed(id);
+      window.__editingModal="modalPekerjaan";openModal("modalPekerjaan");
     });
+  };
+  window.updateJobFixed=function(id){
+    const v=x=>document.getElementById(x)?.value||"";
+    const fs=document.getElementById("jobFarmId"), fo=fs?.options[fs.selectedIndex];
+    db.collection("jobs").doc(id).update({farmId:fs?.value||"",farmName:fo?.dataset.name||"",commodity:fo?.dataset.commodity||v("jobCommodity"),type:v("jobType"),startDate:v("jobStartDate"),duration:v("jobDuration"),workers:v("jobWorkers"),wage:v("jobWage"),location:v("jobLocation"),description:v("jobDescription"),updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{closeModal("modalPekerjaan");resetJobButton();showToast("Pekerjaan berhasil diperbarui.");}).catch(e=>showToast("Gagal memperbarui pekerjaan: "+e.message));
+  };
 
-    const target = document.getElementById("page-" + page);
-
-    if (target) {
-      target.classList.add("active");
-    }
-
-    document.querySelectorAll(".nav-item").forEach(btn => {
-      btn.classList.remove("active");
-    });
-
-    const navButton =
-      clickedButton ||
-      document.querySelector(`.nav-item[data-page="${page}"]`);
-
-    if (navButton) {
-      navButton.classList.add("active");
-    }
-
-    const titles = {
-      dashboard: ["Dashboard", "Ringkasan aktivitas pertanian Anda"],
-      lahan: ["Lahan Saya", "Kelola seluruh lahan pertanian"],
-      pekerjaan: ["Pekerjaan", "Kelola aktivitas pekerjaan pertanian"],
-      panen: ["Hasil Panen", "Catatan hasil pertanian"],
-      marketplace: ["Marketplace", "Produk dan jasa pertanian"],
-      toko: ["Toko Saya", "Kelola produk dan jasa Anda"],
-      transaksi: ["Transaksi", "Riwayat transaksi dan pembayaran"],
-      notifikasi: ["Notifikasi", "Informasi terbaru dari PETANI"],
-      profil: ["Profil", "Kelola informasi akun"]
-    };
-
-    if (titles[page]) {
-
-      document.getElementById("pageTitle").textContent =
-        titles[page][0];
-
-      document.getElementById("pageSubtitle").textContent =
-        titles[page][1];
-
-    }
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-
+  // Products: owner-specific realtime list in Toko Saya.
+  window.loadProducts=function(){
+    if(!currentUserId)return;
+    if(window.__productUnsub)window.__productUnsub();
+    window.__productUnsub=db.collection("products").where("ownerId","==",currentUserId).onSnapshot(s=>{renderMyProductsFixed(s);const c=document.getElementById("tkProducts");if(c)c.textContent=s.size;},e=>showToast("Gagal memuat produk: "+e.message));
+  };
+  function renderMyProductsFixed(s){
+    const g=document.getElementById("myProductGrid");if(!g)return;
+    if(s.empty){g.innerHTML='<div class="empty-state">Belum ada produk. Klik "+ Tambah Produk" untuk menambahkan produk.</div>';return;}
+    g.innerHTML=s.docs.map(d=>{const p=d.data();return `<div class="product-card"><div class="product-photo">${esc(p.icon||"🌱")}</div><div class="product-body"><h3>${esc(p.name)}</h3><p>${esc(p.description||"Produk pertanian")}</p><div class="product-price">${formatRupiah(p.price||0)}</div><div class="product-meta">${esc(p.stock||0)} ${esc(p.unit||"unit")} • ${esc(p.category||"-")}</div><div class="product-actions"><button class="btn btn-outline" onclick="editProductFixed('${d.id}')">Edit</button><button class="btn btn-danger" onclick="deleteProductFixed('${d.id}')">Hapus</button></div></div></div>`}).join("");
   }
+  window.saveProduct=function(){
+    if(!currentUserId){showToast("Sesi pengguna belum siap.");return;}
+    const v=id=>document.getElementById(id)?.value||"";
+    if(!v("newProductName").trim()){showToast("Nama produk belum diisi.");return;}
+    if(num(v("newProductPrice"))<=0){showToast("Harga harus lebih dari 0.");return;}
+    if(!Number.isInteger(num(v("newProductStock")))||num(v("newProductStock"))<1){showToast("Stok minimal 1 (bilangan bulat).");return;}
+    db.collection("products").add({ownerId:currentUserId,ownerName:(userData[currentRole]||{}).name||"",name:v("newProductName").trim(),category:v("newProductCategory"),price:num(v("newProductPrice")),stock:num(v("newProductStock")),unit:v("newProductUnit")||"unit",description:v("newProductDescription"),icon:"🌱",active:true,createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{closeModal("modalProduk");showPage("toko");showToast("Produk berhasil dipublikasikan dan tampil di Toko Saya.");}).catch(e=>showToast("Gagal menyimpan produk: "+e.message));
+  };
+  window.editProductFixed=function(id){
+    db.collection("products").doc(id).get().then(d=>{if(!d.exists)return;const p=d.data(),v=(i,x)=>{const e=document.getElementById(i);if(e)e.value=x??""};v("newProductName",p.name);v("newProductCategory",p.category);v("newProductPrice",p.price);v("newProductStock",p.stock);v("newProductUnit",p.unit);v("newProductDescription",p.description);const b=document.querySelector('#modalProduk .btn.btn-primary');b.textContent="Simpan Perubahan";b.onclick=()=>updateProductFixed(id);window.__editingModal="modalProduk";openModal("modalProduk");});
+  };
+  window.updateProductFixed=function(id){
+    const v=i=>document.getElementById(i)?.value||"";
+    db.collection("products").doc(id).update({name:v("newProductName").trim(),category:v("newProductCategory"),price:num(v("newProductPrice")),stock:num(v("newProductStock")),unit:v("newProductUnit")||"unit",description:v("newProductDescription"),updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{closeModal("modalProduk");resetProductButton();showToast("Produk berhasil diperbarui.");}).catch(e=>showToast("Gagal memperbarui produk: "+e.message));
+  };
+  function resetProductButton(){const b=document.querySelector('#modalProduk .btn.btn-primary');if(b){b.textContent="Publikasikan Produk";b.onclick=window.saveProduct;}}
+  window.deleteProductFixed=id=>{if(!confirm("Hapus produk ini dari Toko Saya?"))return;db.collection("products").doc(id).delete().then(()=>showToast("Produk dihapus.")).catch(e=>showToast("Gagal menghapus produk: "+e.message));};
 
-
-  function mobileNav(page, button) {
-
-    showPage(page);
-
-    document.querySelectorAll(".mobile-nav button")
-      .forEach(btn => btn.classList.remove("active"));
-
-    button.classList.add("active");
-
+  // Modal Pekerjaan/Produk selalu dibuka dalam mode "buat baru" (form bersih, tombol Publikasikan),
+  // kecuali dibuka lewat tombol Edit. Mencegah tombol "Simpan Perubahan" lama menimpa data lama.
+  function resetJobForm(){
+    ["jobStartDate","jobDuration","jobWorkers","jobWage","jobLocation","jobDescription"].forEach(i=>{const e=document.getElementById(i);if(e)e.value="";});
+    resetJobButton();
   }
-
-
-  /* =====================================================
-     MODAL
-  ===================================================== */
-
-  function openModal(id) {
-    document.getElementById(id).classList.add("show");
+  function resetProductForm(){
+    ["newProductName","newProductPrice","newProductStock","newProductUnit","newProductDescription"].forEach(i=>{const e=document.getElementById(i);if(e)e.value="";});
+    resetProductButton();
   }
-
-
-  function closeModal(id) {
-    document.getElementById(id).classList.remove("show");
-  }
-
-
-  document.querySelectorAll(".modal-overlay").forEach(modal => {
-
-    modal.addEventListener("click", function(e) {
-
-      if (e.target === modal) {
-        modal.classList.remove("show");
+  (function(){
+    const baseOpen=window.openModal;
+    window.openModal=function(id){
+      const editing=window.__editingModal===id;
+      window.__editingModal=null;
+      if(!editing){
+        if(id==="modalPekerjaan"){resetJobForm();populateJobFarms();}
+        else if(id==="modalProduk"){resetProductForm();}
       }
+      return baseOpen(id);
+    };
+  })();
 
+  // Profile persisted to users/{uid}.
+  window.loadProfileData=function(){
+    if(!currentUserId)return;
+    db.collection("users").doc(currentUserId).get().then(d=>{
+      if(!d.exists)return;const p=d.data();
+      const set=(id,val)=>{const e=document.getElementById(id);if(e)e.value=val||""};
+      set("profilePhoneInput",p.phone);set("profileProvinceInput",p.province||"Lampung");set("profileDistrictInput",p.district);set("profileAddressInput",p.address);
+      const st=document.getElementById("storeTitle");if(st)st.textContent="🏪 "+(p.storeName||"Toko Saya");
     });
+  };
+  window.saveProfile=function(){
+    if(!currentUserId)return;
+    const name=document.getElementById("profileNameInput").value.trim();if(!name){showToast("Nama belum diisi.");return;}
+    db.collection("users").doc(currentUserId).update({name,phone:document.getElementById("profilePhoneInput").value.trim(),province:document.getElementById("profileProvinceInput").value,district:document.getElementById("profileDistrictInput").value.trim(),address:document.getElementById("profileAddressInput").value.trim(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(()=>{userData[currentRole].name=name;userData[currentRole].initials=initialsOf(name);updateUserInterface();showToast("Profil berhasil diperbarui.");}).catch(e=>showToast("Gagal menyimpan profil: "+e.message));
+  };
 
-  });
+  // Extend login profile initialization so all modules are connected after authentication.
+  window.loadUserProfile=function(user,tries){
+    db.collection("users").doc(user.uid).get().then(d=>{
+      if(!d.exists){ if(window.__registering&&(tries||0)<8){setTimeout(()=>window.loadUserProfile(user,(tries||0)+1),600);return;} showRoleSetup(user);return;}
+      const p=d.data();
+      const roles=normalizedRoles(p);
+      let active=p.activeRole || p.role || (roles.pengguna ? "pengguna" : "mitra");
+      if(!roles[active]) active=roles.pengguna ? "pengguna" : "mitra";
+      currentUserId=user.uid;
+      window.__petaniProfile={...p,roles,activeRole:active};
+      currentRole=active;
+      userData.pengguna={name:p.name||user.email,initials:initialsOf(p.name||user.email),storeName:p.storeName||"",role:"Petani Pengguna"};
+      userData.mitra={name:p.name||user.email,initials:initialsOf(p.name||user.email),storeName:p.storeName||"",role:"Petani Mitra"};
+      document.getElementById("loginScreen").style.display="none";
+      document.getElementById("app").style.display="block";
+      const hasBoth=roles.pengguna&&roles.mitra;
+      const switchBtn=document.getElementById("roleSwitchBtn");
+      if(switchBtn) switchBtn.style.display=hasBoth?"inline-flex":"none";
+      setRoleInterface(active);
+      loadProfileData();
+      if(hasBoth && !p.roles){
+        db.collection("users").doc(user.uid).update({roles:roles,activeRole:active});
+      }
+    }).catch(e=>showToast("Gagal memuat profil: "+e.message));
+  };
+})();
 
 
-  /* =====================================================
-     ADD FARM
-  ===================================================== */
 
-  function addFarm() {
+/* =====================================================
+   MARKETPLACE & TRANSAKSI — data nyata dari Firestore
+   products -> marketplace -> keranjang -> checkout -> orders
+   Semua angka/daftar di Dashboard, Toko Saya, Transaksi, dan
+   Notifikasi dihitung dari dokumen milik UID yang login.
+===================================================== */
+(function(){
+  const esc=v=>{const d=document.createElement("div");d.textContent=v==null?"":String(v);return d.innerHTML.replace(/"/g,"&quot;").replace(/'/g,"&#39;");};
+  const num=v=>{const n=Number(v);return Number.isFinite(n)?n:0;};
+  const TS=()=>firebase.firestore.FieldValue.serverTimestamp();
+  const setT=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  const ST={menunggu_pembayaran:["Menunggu Pembayaran","warning"],dibayar:["Dibayar","info"],diproses:["Diproses","info"],dikirim:["Dikirim","info"],selesai:["Selesai","success"],dibatalkan:["Dibatalkan","danger"]};
+  const CAT={"Bibit":"bibit","Pupuk":"pupuk","Alat Tani":"alat","Hasil Tani":"produk"};
+  const ms=o=>(o.updatedAt&&o.updatedAt.toMillis?o.updatedAt.toMillis():0)||(o.createdAt&&o.createdAt.toMillis?o.createdAt.toMillis():0);
+  const fmtDate=t=>{const d=t&&t.toDate?t.toDate():null;return d?d.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"}):"-";};
+  const oid=o=>"#"+o.id.slice(-6).toUpperCase();
+  const names=o=>(o.items||[]).map(i=>i.name+" ×"+i.qty).join(", ");
+  let market={}, buyOrders=[], sellOrders=[], unsubs=[], lastRows=[], shipOrderId=null;
+  const KURIR=["JNE","J&T","SiCepat","POS Indonesia","Antar Langsung (kurir toko)"];
+  const OWN_COURIER=KURIR[KURIR.length-1];
+  const fmtDT=t=>{const d=t&&t.toDate?t.toDate():null;return d?d.toLocaleString("id-ID",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}):"";};
 
-    const name = document.getElementById("farmName").value;
+  /* ---------- Keranjang: dipisah per akun (UID) ---------- */
+  const cartKey=()=>"petaniCart_"+(currentUserId||"guest");
+  function saveCart(){try{localStorage.setItem(cartKey(),JSON.stringify(cart));}catch(e){}updateCartCount();}
+  function loadCart(){try{cart=JSON.parse(localStorage.getItem(cartKey())||"[]").filter(i=>i&&i.productId);}catch(e){cart=[];}updateCartCount();}
 
-    if (!name) {
-      showToast("Nama lahan belum diisi.");
-      return;
-    }
-
-    closeModal("modalLahan");
-
-    document.getElementById("farmName").value = "";
-
-    showToast("Lahan berhasil ditambahkan.");
-
+  /* ---------- Marketplace ---------- */
+  function loadMarketplace(){
+    if(window.__marketUnsub)window.__marketUnsub();
+    window.__marketUnsub=db.collection("products").where("active","==",true).onSnapshot(s=>{
+      market={};s.docs.forEach(d=>{market[d.id]={id:d.id,...d.data()};});renderMarket();
+    },e=>showToast("Gagal memuat marketplace: "+e.message));
   }
-
-
-  /* =====================================================
-     CREATE JOB
-  ===================================================== */
-
-  function createJob() {
-
-    closeModal("modalPekerjaan");
-
-    showToast(
-      currentRole === "mitra"
-        ? "Pencarian pekerjaan diperbarui."
-        : "Pekerjaan berhasil dipublikasikan."
-    );
-
+  function renderMarket(){
+    const g=document.getElementById("productGrid");if(!g)return;
+    const list=Object.values(market).filter(p=>num(p.stock)>0).sort((a,b)=>ms(b)-ms(a));
+    if(!list.length){g.innerHTML='<div class="empty-state">Belum ada produk tersedia.</div>';return;}
+    g.innerHTML=list.map(p=>{const own=p.ownerId===currentUserId;
+      return `<div class="product-card" data-category="${esc(CAT[p.category]||"lainnya")}" data-search="${esc([p.name,p.description,p.ownerName,p.category].join(" ").toLowerCase())}"><div class="product-photo">${esc(p.icon||"🌱")}</div><div class="product-body"><h3>${esc(p.name)}</h3><p>${esc(p.description||"Produk pertanian")}</p><div class="product-price">${formatRupiah(num(p.price))}</div><div class="product-meta">${esc(p.stock)} ${esc(p.unit||"unit")} tersedia • ${esc(p.ownerName||"Penjual")}</div><div class="product-actions"><button class="btn btn-outline" onclick="openProductDetail('${p.id}')">Detail</button>${own?'<button class="btn btn-outline" disabled>Produk Anda</button>':`<button class="btn btn-primary" onclick="addToCart('${p.id}')">+ Keranjang</button>`}</div></div></div>`;}).join("");
+    applyFilter();
   }
-
-
-  /* =====================================================
-     SAVE HARVEST
-  ===================================================== */
-
-  function saveHarvest() {
-
-    closeModal("modalPanen");
-
-    showToast("Hasil panen berhasil dicatat.");
-
-  }
-
-
-
-
-  /* =====================================================
-     MARKETPLACE
-  ===================================================== */
-  let cart = JSON.parse(localStorage.getItem("petaniCart") || "[]");
-  let marketCategory = "all";
-
-  function marketTab(tab){
-    document.getElementById("marketProduk").style.display = tab === "produk" ? "block" : "none";
-    document.getElementById("marketJasa").style.display = tab === "jasa" ? "block" : "none";
-    document.getElementById("tabProduk").classList.toggle("active", tab === "produk");
-    document.getElementById("tabJasa").classList.toggle("active", tab === "jasa");
-  }
-
-  function filterCategory(category){
-    marketCategory = category;
-    marketTab(category === "jasa" ? "jasa" : "produk");
-    document.querySelectorAll(".product-card").forEach(card => {
-      const match = category === "all" || category === "jasa" || card.dataset.category === category;
-      card.style.display = match ? "block" : "none";
+  // Filter hanya untuk kartu Marketplace (#productGrid), bukan kartu di Toko Saya.
+  function applyFilter(){
+    const q=(document.getElementById("marketSearch").value||"").toLowerCase();
+    document.querySelectorAll("#productGrid .product-card").forEach(c=>{
+      const okCat=marketCategory==="all"||marketCategory==="jasa"||c.dataset.category===marketCategory;
+      c.style.display=okCat&&(c.dataset.search||"").includes(q)?"":"none";
     });
   }
+  window.filterCategory=function(c){marketCategory=c;marketTab(c==="jasa"?"jasa":"produk");applyFilter();};
+  window.filterMarketplace=applyFilter;
 
-  function filterMarketplace(){
-    const q = (document.getElementById("marketSearch").value || "").toLowerCase();
-    document.querySelectorAll(".product-card").forEach(card => {
-      const text = (card.dataset.search || "").toLowerCase();
-      const categoryMatch = marketCategory === "all" || marketCategory === "jasa" || card.dataset.category === marketCategory;
-      card.style.display = categoryMatch && text.includes(q) ? "block" : "none";
-    });
-  }
+  window.openProductDetail=function(id){
+    const p=market[id];if(!p){showToast("Produk tidak ditemukan.");return;}
+    const own=p.ownerId===currentUserId;
+    setT("detName",p.name);setT("detSeller","Dijual oleh "+(p.ownerName||"Penjual"));
+    document.getElementById("detBody").innerHTML=`<div class="product-photo" style="height:110px;border-radius:12px;margin-bottom:12px">${esc(p.icon||"🌱")}</div><div class="product-price">${formatRupiah(num(p.price))} <small style="font-size:11px;color:#6b7280">/ ${esc(p.unit||"unit")}</small></div><p style="font-size:12px;margin:8px 0">${esc(p.description||"Produk pertanian")}</p><div class="product-meta">Stok ${esc(p.stock)} ${esc(p.unit||"unit")} • ${esc(p.category||"-")} • ${esc(p.ownerName||"Penjual")}</div>`;
+    const q=document.getElementById("detQty");q.value=1;q.max=num(p.stock);
+    const b=document.getElementById("detAddBtn");b.disabled=own;b.textContent=own?"Produk Anda sendiri":"+ Tambah ke Keranjang";
+    b.onclick=()=>{addToCart(id,q.value);closeModal("modalDetail");};
+    openModal("modalDetail");
+  };
 
-  function addToCart(name, price, icon){
-    const existing = cart.find(item => item.name === name);
-    if(existing) existing.qty++;
-    else cart.push({name, price, icon, qty:1});
-    localStorage.setItem("petaniCart", JSON.stringify(cart));
-    updateCartCount();
-    showToast(name + " ditambahkan ke keranjang.");
-  }
-
-  function updateCartCount(){
-    const count = cart.reduce((sum,item)=>sum+item.qty,0);
-    const el = document.getElementById("cartCount");
-    if(el) el.textContent = count;
-  }
-
-  function formatRupiah(n){ return "Rp" + Number(n).toLocaleString("id-ID"); }
-
-  function openCart(){
-    renderCart();
-    openModal("modalCart");
-  }
-
-  function renderCart(){
-    const list = document.getElementById("cartList");
-    const totalEl = document.getElementById("cartTotal");
-    if(!cart.length){ list.innerHTML = '<div style="text-align:center;padding:25px;color:#6b7280;font-size:12px">🛒<br><br>Keranjang masih kosong.</div>'; totalEl.textContent="Rp0"; return; }
+  /* ---------- Keranjang ---------- */
+  window.addToCart=function(id,qty){
+    const p=market[id];qty=Math.max(1,parseInt(qty)||1);
+    if(!p||num(p.stock)<=0){showToast("Produk tidak tersedia.");return;}
+    if(p.ownerId===currentUserId){showToast("Anda tidak dapat membeli produk sendiri.");return;}
+    const ex=cart.find(i=>i.productId===id),total=(ex?ex.qty:0)+qty;
+    if(total>num(p.stock)){showToast("Jumlah melebihi stok ("+p.stock+" "+(p.unit||"unit")+").");return;}
+    if(ex)ex.qty=total;else cart.push({productId:id,name:p.name,price:num(p.price),icon:p.icon||"🌱",unit:p.unit||"unit",sellerId:p.ownerId,sellerName:p.ownerName||"Penjual",qty});
+    saveCart();showToast(p.name+" ditambahkan ke keranjang.");
+  };
+  window.changeCartQty=function(i,d){
+    const it=cart[i];if(!it)return;const p=market[it.productId],n=it.qty+d;
+    if(n<1)return;if(p&&n>num(p.stock)){showToast("Stok hanya "+p.stock+" "+(p.unit||"unit")+".");return;}
+    it.qty=n;saveCart();renderCart();
+  };
+  window.removeCart=function(i){cart.splice(i,1);saveCart();renderCart();};
+  window.renderCart=function(){
+    const list=document.getElementById("cartList"),totalEl=document.getElementById("cartTotal");
+    if(!cart.length){list.innerHTML='<div style="text-align:center;padding:25px;color:#6b7280;font-size:12px">🛒<br><br>Keranjang masih kosong.</div>';totalEl.textContent="Rp0";return;}
     let total=0;
-    list.innerHTML=cart.map((item,i)=>{ total += item.price*item.qty; return `<div class="cart-item"><div class="cart-thumb">${item.icon}</div><div class="cart-item-main"><strong>${item.name}</strong><small>${formatRupiah(item.price)} × ${item.qty}</small></div><button class="btn btn-danger" onclick="removeCart(${i})">Hapus</button></div>`; }).join("");
+    list.innerHTML=cart.map((it,i)=>{total+=it.price*it.qty;return `<div class="cart-item"><div class="cart-thumb">${esc(it.icon)}</div><div class="cart-item-main"><strong>${esc(it.name)}</strong><small>${formatRupiah(it.price)} × ${it.qty} ${esc(it.unit)} • ${esc(it.sellerName)}</small></div><button class="btn btn-outline" onclick="changeCartQty(${i},-1)">−</button><button class="btn btn-outline" onclick="changeCartQty(${i},1)">+</button><button class="btn btn-danger" onclick="removeCart(${i})">Hapus</button></div>`;}).join("");
     totalEl.textContent=formatRupiah(total);
+  };
+
+  /* ---------- Checkout: keranjang -> orders (1 order per penjual) ---------- */
+  window.checkoutCart=function(){
+    if(!cart.length){showToast("Keranjang masih kosong.");return;}
+    // Segarkan harga/nama dari data terbaru; buang produk yang sudah tidak ada.
+    const before=cart.length;
+    cart=cart.filter(i=>market[i.productId]&&num(market[i.productId].stock)>0).map(i=>{const p=market[i.productId];return {...i,name:p.name,price:num(p.price),unit:p.unit||"unit"};});
+    saveCart();
+    if(cart.length<before)showToast("Sebagian produk sudah tidak tersedia dan dikeluarkan dari keranjang.");
+    if(!cart.length){renderCart();return;}
+    const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+    document.getElementById("coSummary").innerHTML=cart.map(i=>`<div class="cart-item"><div class="cart-thumb">${esc(i.icon)}</div><div class="cart-item-main"><strong>${esc(i.name)}</strong><small>${i.qty} ${esc(i.unit)} × ${formatRupiah(i.price)} • ${esc(i.sellerName)}</small></div><strong>${formatRupiah(i.price*i.qty)}</strong></div>`).join("");
+    setT("coTotal",formatRupiah(total));
+    const a=document.getElementById("coAddress");if(!a.value.trim())a.value=(window.__petaniProfile||{}).address||"";
+    closeModal("modalCart");openModal("modalCheckout");
+  };
+  window.confirmCheckout=function(){
+    const addr=document.getElementById("coAddress").value.trim(),method=document.getElementById("coMethod").value;
+    if(!addr){showToast("Alamat pengiriman wajib diisi.");return;}
+    if(!cart.length){showToast("Keranjang masih kosong.");return;}
+    const btn=document.getElementById("coBtn");btn.disabled=true;
+    const items=cart.map(i=>({productId:i.productId,qty:i.qty}));
+    const buyerName=(window.__petaniProfile||{}).name||"Pembeli";
+    let made=0;
+    db.runTransaction(async tx=>{
+      made=0;
+      const refs=items.map(i=>db.collection("products").doc(i.productId));
+      const snaps=await Promise.all(refs.map(r=>tx.get(r)));   // semua baca dulu, baru tulis
+      const by={};
+      snaps.forEach((s,k)=>{
+        const p=s.exists?s.data():null,it=items[k];
+        if(!p||p.active===false)throw new Error("Ada produk yang sudah tidak tersedia.");
+        if(p.ownerId===currentUserId)throw new Error("Tidak dapat membeli produk sendiri.");
+        if(num(p.stock)<it.qty)throw new Error("Stok "+p.name+" tersisa "+num(p.stock)+".");
+        tx.update(refs[k],{stock:num(p.stock)-it.qty});
+        (by[p.ownerId]=by[p.ownerId]||{sellerName:p.ownerName||"Penjual",items:[]}).items.push({productId:s.id,name:p.name,price:num(p.price),qty:it.qty,unit:p.unit||"unit",icon:p.icon||"🌱"});
+      });
+      Object.keys(by).forEach(sid=>{
+        const g=by[sid],sub=g.items.reduce((s,i)=>s+i.price*i.qty,0);
+        tx.set(db.collection("orders").doc(),{buyerId:currentUserId,buyerName,sellerId:sid,sellerName:g.sellerName,items:g.items,subtotal:sub,total:sub,address:addr,paymentMethod:method,status:"menunggu_pembayaran",createdAt:TS(),updatedAt:TS()});
+        made++;
+      });
+    }).then(()=>{
+      cart=[];saveCart();closeModal("modalCheckout");showPage("transaksi");
+      showToast(made+" pesanan dibuat. Silakan lakukan pembayaran (simulasi).");
+    }).catch(e=>showToast("Checkout gagal: "+e.message)).finally(()=>{btn.disabled=false;});
+  };
+
+  /* ---------- Alur status pesanan ---------- */
+  // pembeli: bayar, batalkan (hanya saat menunggu), terima | penjual: proses, kirim
+  const FLOW={pay:["dibayar","menunggu_pembayaran","buyerId","paidAt"],receive:["selesai","dikirim","buyerId","receivedAt"],process:["diproses","dibayar","sellerId","processedAt"]};
+  window.orderAction=function(id,act){
+    if(act==="cancel")return cancelOrder(id);
+    if(act==="ship")return openShip(id);
+    const f=FLOW[act];if(!f)return;const ref=db.collection("orders").doc(id);
+    db.runTransaction(tx=>tx.get(ref).then(d=>{
+      if(!d.exists)throw new Error("Pesanan tidak ditemukan.");
+      const o=d.data();
+      if(o[f[2]]!==currentUserId)throw new Error("Anda tidak berwenang atas aksi ini.");
+      if(o.status!==f[1])throw new Error("Status pesanan sudah berubah, muat ulang.");
+      tx.update(ref,{status:f[0],[f[3]]:TS(),updatedAt:TS()});
+    })).then(()=>showToast("Status pesanan: "+ST[f[0]][0]+".")).catch(e=>showToast("Gagal memperbarui pesanan: "+e.message));
+  };
+
+  /* ---------- Pengiriman: penjual mengisi kurir & resi ---------- */
+  function openShip(id){
+    const o=sellOrders.find(x=>x.id===id);if(!o){showToast("Pesanan tidak ditemukan.");return;}
+    shipOrderId=id;
+    document.getElementById("shipCourier").innerHTML=KURIR.map(k=>`<option>${esc(k)}</option>`).join("");
+    document.getElementById("shipResi").value="";
+    setT("shipInfo","Kirim ke: "+(o.buyerName||"Pembeli")+" — "+(o.address||"-"));
+    setT("shipItems",names(o));
+    document.getElementById("shipResiHint").style.display="none";
+    openModal("modalShip");
+  }
+  window.confirmShip=function(){
+    const courier=document.getElementById("shipCourier").value,resi=document.getElementById("shipResi").value.trim();
+    if(!shipOrderId)return;
+    if(courier!==OWN_COURIER&&resi.length<4){showToast("Nomor resi wajib diisi (minimal 4 karakter).");return;}
+    const ref=db.collection("orders").doc(shipOrderId),btn=document.getElementById("shipBtn");btn.disabled=true;
+    db.runTransaction(tx=>tx.get(ref).then(d=>{
+      if(!d.exists)throw new Error("Pesanan tidak ditemukan.");
+      const o=d.data();
+      if(o.sellerId!==currentUserId)throw new Error("Anda tidak berwenang atas pesanan ini.");
+      if(o.status!=="diproses")throw new Error("Status pesanan sudah berubah, muat ulang.");
+      tx.update(ref,{status:"dikirim",courier:courier,trackingNumber:resi||"-",shippedAt:TS(),updatedAt:TS()});
+    })).then(()=>{closeModal("modalShip");shipOrderId=null;showToast("Pesanan dikirim. Pembeli akan diminta konfirmasi saat barang tiba.");})
+      .catch(e=>showToast("Gagal mengirim pesanan: "+e.message)).finally(()=>{btn.disabled=false;});
+  };
+  function shipLine(o){
+    if(!o.courier)return "";
+    return `<br><small>🚚 ${esc(o.courier)}${o.trackingNumber&&o.trackingNumber!=="-"?" • Resi: <strong>"+esc(o.trackingNumber)+"</strong>":""}</small>`;
   }
 
-  function removeCart(index){ cart.splice(index,1); localStorage.setItem("petaniCart",JSON.stringify(cart)); updateCartCount(); renderCart(); }
-
-  function checkoutCart(){
-    if(!cart.length){ showToast("Keranjang masih kosong."); return; }
-    closeModal("modalCart");
-    showToast("Pesanan dibuat. Lanjutkan ke transaksi untuk pembayaran.");
+  /* ---------- Detail pesanan + linimasa status ---------- */
+  window.orderDetail=function(id){
+    const o=lastRows.find(x=>x.id===id);if(!o){showToast("Pesanan tidak ditemukan.");return;}
+    const buy=o.kind==="beli",st=ST[o.status]||[o.status,"info"];
+    setT("odTitle","Pesanan "+oid(o));
+    const step=(ic,t,ts,extra)=>ts?`<div class="list-item"><div class="list-main"><div class="list-icon">${ic}</div><div><strong>${t}</strong><small>${fmtDT(ts)}${extra||""}</small></div></div><span class="badge success">✓</span></div>`:`<div class="list-item" style="opacity:.45"><div class="list-main"><div class="list-icon">${ic}</div><div><strong>${t}</strong><small>Belum</small></div></div></div>`;
+    let tl;
+    if(o.status==="dibatalkan"){tl=step("🧾","Pesanan dibuat",o.createdAt)+`<div class="list-item"><div class="list-main"><div class="list-icon">✖️</div><div><strong>Dibatalkan</strong><small>${fmtDT(o.updatedAt)}</small></div></div><span class="badge danger">Batal</span></div>`;}
+    else tl=step("🧾","Pesanan dibuat",o.createdAt)+step("💳","Dibayar",o.paidAt)+step("📦","Diproses penjual",o.processedAt)+step("🚚","Dikirim",o.shippedAt,o.courier?" • "+esc(o.courier)+(o.trackingNumber&&o.trackingNumber!=="-"?" • Resi "+esc(o.trackingNumber):""):"")+step("🌾","Diterima pembeli",o.receivedAt);
+    document.getElementById("odBody").innerHTML=`<div class="product-meta" style="margin-bottom:8px"><span class="badge ${st[1]}">${st[0]}</span> &nbsp;${buy?"Penjual: "+esc(o.sellerName):"Pembeli: "+esc(o.buyerName)} • ${esc(o.paymentMethod||"-")}</div>`+
+      (o.items||[]).map(i=>`<div class="cart-item"><div class="cart-thumb">${esc(i.icon||"🌱")}</div><div class="cart-item-main"><strong>${esc(i.name)}</strong><small>${i.qty} ${esc(i.unit||"unit")} × ${formatRupiah(num(i.price))}</small></div><strong>${formatRupiah(num(i.price)*num(i.qty))}</strong></div>`).join("")+
+      `<div class="cart-total"><span>Total</span><span>${formatRupiah(num(o.total))}</span></div><p style="font-size:11px;margin:8px 0"><strong>Alamat:</strong> ${esc(o.address||"-")}</p><div class="list">${tl}</div>`;
+    openModal("modalOrder");
+  };
+  function cancelOrder(id){
+    if(!confirm("Batalkan pesanan ini? Stok akan dikembalikan."))return;
+    const ref=db.collection("orders").doc(id);
+    db.runTransaction(async tx=>{
+      const d=await tx.get(ref);if(!d.exists)throw new Error("Pesanan tidak ditemukan.");
+      const o=d.data();
+      if(o.buyerId!==currentUserId)throw new Error("Hanya pembeli yang dapat membatalkan.");
+      if(o.status!=="menunggu_pembayaran")throw new Error("Pesanan yang sudah dibayar tidak dapat dibatalkan.");
+      const prefs=o.items.map(i=>db.collection("products").doc(i.productId));
+      const ps=await Promise.all(prefs.map(r=>tx.get(r)));
+      ps.forEach((s,k)=>{if(s.exists)tx.update(prefs[k],{stock:num(s.data().stock)+o.items[k].qty});});
+      tx.update(ref,{status:"dibatalkan",updatedAt:TS()});
+    }).then(()=>showToast("Pesanan dibatalkan, stok dikembalikan.")).catch(e=>showToast("Gagal membatalkan: "+e.message));
   }
 
-  function createStore(){
-    const name=document.getElementById("storeName").value.trim();
-    if(!name){ showToast("Nama toko belum diisi."); return; }
-    closeModal("modalToko");
-    showToast("Toko " + name + " berhasil dibuat.");
-    showPage("toko");
+  /* ---------- Orders realtime + semua tampilan turunan ---------- */
+  function loadOrders(){
+    stopOrders();
+    const err=e=>showToast("Gagal memuat transaksi: "+e.message),mp=d=>({id:d.id,...d.data()});
+    unsubs.push(db.collection("orders").where("buyerId","==",currentUserId).onSnapshot(s=>{buyOrders=s.docs.map(mp);renderOrders();},err));
+    unsubs.push(db.collection("orders").where("sellerId","==",currentUserId).onSnapshot(s=>{sellOrders=s.docs.map(mp);renderOrders();},err));
   }
-
-  function saveProduct(){
-    const name=document.getElementById("newProductName").value.trim();
-    if(!name){ showToast("Nama produk belum diisi."); return; }
-    closeModal("modalProduk");
-    document.getElementById("newProductName").value="";
-    showToast("Produk berhasil dipublikasikan.");
-  }
-
-  function saveService(){ closeModal("modalJasa"); showToast("Jasa berhasil dipublikasikan."); }
-
-
-  /* =====================================================
-     PROFILE
-  ===================================================== */
-
-  function saveProfile() {
-
-    const newName =
-      document.getElementById("profileNameInput").value;
-
-    if (!newName) {
-      showToast("Nama belum diisi.");
-      return;
+  function stopOrders(){unsubs.forEach(u=>u());unsubs=[];buyOrders=[];sellOrders=[];}
+  function actions(o){
+    const b=(a,t,c)=>`<button class="btn ${c||"btn-primary"}" onclick="orderAction('${o.id}','${a}')">${t}</button>`;
+    let main="";
+    if(o.kind==="beli"){
+      if(o.status==="menunggu_pembayaran")main=b("pay","Bayar")+" "+b("cancel","Batalkan","btn-outline");
+      else if(o.status==="dikirim")main=b("receive","Pesanan Diterima");
+    }else{
+      if(o.status==="dibayar")main=b("process","Proses");
+      else if(o.status==="diproses")main=b("ship","Kirim");
     }
-
-    document.getElementById("profileName").textContent = newName;
-    document.getElementById("topName").textContent = newName;
-
-    showToast("Profil berhasil diperbarui.");
-
+    return (main?main+" ":"")+`<button class="btn btn-outline" onclick="orderDetail('${o.id}')">Detail</button>`;
   }
-
-
-  /* =====================================================
-     TOAST
-  ===================================================== */
-
-  let toastTimer;
-
-  function showToast(message) {
-
-    const toast = document.getElementById("toast");
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-    clearTimeout(toastTimer);
-
-    toastTimer = setTimeout(() => {
-
-      toast.classList.remove("show");
-
-    }, 2600);
-
-  }
-
-
-  /* =====================================================
-     INITIAL LOAD
-  ===================================================== */
-
-  updateCartCount();
-
-  if (currentRole) {
-
-    document.getElementById("loginScreen").style.display = "none";
-    document.getElementById("app").style.display = "block";
-
-    updateUserInterface();
-
-    if (currentRole === "mitra") {
-      activateMitraMode();
+  function notif(o){
+    const n=(o.items||[]).map(i=>i.name).join(", ");
+    if(o.kind==="jual"){
+      if(o.status==="menunggu_pembayaran")return ["⏳","Menunggu pembayaran dari "+o.buyerName,n,false];
+      if(o.status==="dibayar")return ["🛒","Pesanan baru dari "+o.buyerName+" siap diproses",n,true];
+      if(o.status==="diproses")return ["📦","Pesanan untuk "+o.buyerName+" siap dikirim",n,true];
+      if(o.status==="dikirim")return ["🚚","Dikirim via "+(o.courier||"kurir")+(o.trackingNumber&&o.trackingNumber!=="-"?" (resi "+o.trackingNumber+")":"")+", menunggu "+o.buyerName+" menerima",n,false];
+      if(o.status==="selesai")return ["💰","Pesanan selesai, "+formatRupiah(num(o.total))+" diterima",n,false];
+      return ["✖️","Pesanan dibatalkan oleh "+o.buyerName,n,false];
     }
-
+    if(o.status==="menunggu_pembayaran")return ["💳","Selesaikan pembayaran ke "+o.sellerName,n,true];
+    if(o.status==="dibayar")return ["✅","Pembayaran diterima, menunggu "+o.sellerName+" memproses",n,false];
+    if(o.status==="diproses")return ["📦","Pesanan Anda sedang diproses "+o.sellerName,n,false];
+    if(o.status==="dikirim")return ["🚚","Pesanan dikirim via "+(o.courier||"kurir")+(o.trackingNumber&&o.trackingNumber!=="-"?" (resi "+o.trackingNumber+")":"")+". Tekan Diterima jika barang sudah sampai",n,true];
+    if(o.status==="selesai")return ["🌾","Pesanan dari "+o.sellerName+" selesai",n,false];
+    return ["✖️","Pesanan ke "+o.sellerName+" dibatalkan",n,false];
   }
+  function renderOrders(){
+    const rows=[...buyOrders.map(o=>({...o,kind:"beli"})),...sellOrders.map(o=>({...o,kind:"jual"}))].sort((a,b)=>ms(b)-ms(a));
+    lastRows=rows;
+    const paid=["dibayar","diproses","dikirim","selesai"],open=["menunggu_pembayaran","dibayar","diproses","dikirim"];
+    const sum=a=>a.reduce((s,o)=>s+num(o.total),0);
+    const income=sum(sellOrders.filter(o=>o.status==="selesai"));
+    setT("stIncome",formatRupiah(income));setT("statIncome",formatRupiah(income));setT("tkIncome",formatRupiah(income));
+    setT("stExpense",formatRupiah(sum(buyOrders.filter(o=>paid.includes(o.status)))));
+    setT("stPending",formatRupiah(sum(sellOrders.filter(o=>open.includes(o.status)))));
+    setT("stDone",rows.filter(o=>o.status==="selesai").length);
+    setT("tkOrders",sellOrders.length);
+    const tb=document.getElementById("orderRows");
+    if(tb)tb.innerHTML=rows.length?rows.map(o=>{const st=ST[o.status]||[o.status,"info"],buy=o.kind==="beli";
+      return `<tr><td>${oid(o)}</td><td>${fmtDate(o.createdAt)}</td><td>${buy?"Pembelian":"Penjualan"}</td><td>${esc(names(o))}<br><small>${buy?"Penjual: "+esc(o.sellerName):"Pembeli: "+esc(o.buyerName)} • ${esc(o.paymentMethod||"-")}${buy?"":" • Kirim ke: "+esc(o.address||"-")}</small>${shipLine(o)}</td><td>${formatRupiah(num(o.total))}</td><td><span class="badge ${st[1]}">${st[0]}</span></td><td>${actions(o)}</td></tr>`;}).join(""):'<tr><td colspan="7"><div class="empty-state">Belum ada transaksi.</div></td></tr>';
+    const item=(ic,t,s,badge)=>`<div class="list-item"><div class="list-main"><div class="list-icon">${ic}</div><div><strong>${esc(t)}</strong><small>${esc(s)}</small></div></div>${badge}</div>`;
+    const act=rows.slice(0,4).map(o=>{const st=ST[o.status]||[o.status,"info"];return item(o.kind==="beli"?"🛒":"💰",(o.kind==="beli"?"Pembelian ":"Penjualan ")+names(o),fmtDate(o.createdAt)+" • "+formatRupiah(num(o.total)),`<span class="badge ${st[1]}">${st[0]}</span>`);}).join("");
+    const da=document.getElementById("dashActivity");if(da)da.innerHTML=act||'<div class="empty-state">Belum ada aktivitas.</div>';
+    const ns=rows.map(o=>({o,n:notif(o)}));
+    const need=ns.filter(x=>x.n[3]).length;
+    const dn=document.getElementById("dashNotif");
+    if(dn)dn.innerHTML=ns.slice(0,3).map(x=>item(x.n[0],x.n[1],x.n[2],"")).join("")||'<div class="empty-state">Belum ada notifikasi.</div>';
+    const nl=document.getElementById("notifList");
+    if(nl)nl.innerHTML=ns.map(x=>item(x.n[0],x.n[1],x.n[2]+" • "+oid(x.o),x.n[3]?'<span class="badge warning">Perlu tindakan</span>':"")).join("")||'<div class="empty-state">Belum ada notifikasi.</div>';
+    const dot=document.getElementById("notifDot");if(dot)dot.style.display=need?"":"none";
+  }
+
+  /* ---------- Siklus hidup: mulai saat login, berhenti saat logout ---------- */
+  function startMarketplace(){
+    if(window.__mktUid===currentUserId)return;
+    window.__mktUid=currentUserId;loadCart();loadMarketplace();loadOrders();
+  }
+  function stopAll(){
+    ["__marketUnsub","__productUnsub","__jobUnsub","__farmUnsub"].forEach(k=>{if(window[k]){try{window[k]();}catch(e){}window[k]=null;}});
+    stopOrders();market={};cart=[];window.__mktUid=null;updateCartCount();renderMarket();renderOrders();
+  }
+  const _sri=window.setRoleInterface;
+  window.setRoleInterface=function(role){_sri(role);startMarketplace();};
+  const _sl=window.showLoginScreen;
+  window.showLoginScreen=function(){stopAll();_sl();};
+  const _lo=window.logout;
+  window.logout=function(){stopAll();_lo();};
+})();
 
 </script>
 
