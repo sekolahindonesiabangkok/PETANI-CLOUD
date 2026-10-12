@@ -1275,6 +1275,16 @@
 
 
 
+
+    /* ===== v8: alur pekerjaan, admin ===== */
+    .btn:disabled{opacity:.5;cursor:not-allowed}
+    .worker-list{margin-top:12px;display:flex;flex-direction:column;gap:7px}
+    .worker-row{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--bg);border-radius:10px;padding:8px 10px;font-size:11px}
+    .worker-row small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+    .job-note{font-size:10px;color:#92400e;background:#fef3c7;border-radius:8px;padding:6px 8px;margin-top:10px}
+    .job-flow-hint{font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5}
+    #adminBadge{margin-left:2px}
+    #myJobsWrap .stats-grid{margin-bottom:16px}
   </style>
 </head>
 
@@ -1500,6 +1510,7 @@
         <div class="user-mini">
           <div class="avatar" id="topAvatar">AR</div>
           <span id="topName">Andi Rahman</span>
+          <span class="badge warning" id="adminBadge" style="display:none">ADMIN</span>
         </div>
 
       </div>
@@ -1693,6 +1704,8 @@
     ================================================= -->
 
     <section class="page" id="page-panen">
+
+      <div id="myJobsWrap" style="display:none"></div>
 
       <div class="section-header">
 
@@ -2181,27 +2194,28 @@
   <div class="modal">
 
     <div class="modal-header">
-
       <div>
         <h3>Catat Hasil Panen</h3>
         <p style="font-size:11px;color:#6b7280;margin-top:3px;">
-          Simpan hasil panen ke riwayat pertanian.
+          Simpan hasil panen dan hubungkan dengan pekerjaan panen.
         </p>
       </div>
-
-      <button class="close-modal" onclick="closeModal('modalPanen')">
-        ✕
-      </button>
-
+      <button class="close-modal" onclick="closeModal('modalPanen')">✕</button>
     </div>
-
 
     <div class="form-grid">
 
       <div class="form-group">
         <label>Lahan</label>
-        <select>
+        <select id="harvestFarmId" onchange="onHarvestFarmChange()">
           <option value="">Pilih lahan…</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Pekerjaan Panen Terkait</label>
+        <select id="harvestJobId" onchange="onHarvestJobChange()">
+          <option value="">Tanpa pekerjaan terkait</option>
         </select>
       </div>
 
@@ -2213,23 +2227,26 @@
           <option>Jagung</option>
           <option>Kopi</option>
           <option>Kakao</option>
+          <option>Karet</option>
+          <option>Sayuran</option>
+          <option>Buah-buahan</option>
           <option>Lainnya</option>
         </select>
       </div>
 
       <div class="form-group">
         <label>Tanggal Panen</label>
-        <input type="date">
+        <input type="date" id="harvestDate">
       </div>
 
       <div class="form-group">
         <label>Jumlah Hasil</label>
-        <input type="number" placeholder="Contoh: 850">
+        <input type="number" id="harvestQty" min="0" step="any" placeholder="Contoh: 850">
       </div>
 
       <div class="form-group">
         <label>Satuan</label>
-        <select>
+        <select id="harvestUnit">
           <option>kg</option>
           <option>ton</option>
           <option>ikat</option>
@@ -2240,17 +2257,12 @@
 
       <div class="form-group">
         <label>Harga</label>
-        <input placeholder="Harga total">
+        <input id="harvestPrice" placeholder="Harga total (opsional)">
       </div>
 
-      <div class="form-group full">
+      <div class="form-group">
         <label>Pembeli</label>
-        <input placeholder="Nama pembeli/pengepul">
-      </div>
-
-      <div class="form-group full">
-        <label>Foto Hasil Panen</label>
-        <input type="file" accept="image/*">
+        <input id="harvestBuyer" placeholder="Nama pembeli/pengepul">
       </div>
 
     </div>
@@ -2265,9 +2277,6 @@
 
 </div>
 
-
-
-
 <!-- =====================================================
      MODAL BUKA TOKO
 ===================================================== -->
@@ -2281,6 +2290,12 @@
 
 <!-- MODAL KERANJANG -->
 <div class="modal-overlay" id="modalCart"><div class="modal"><div class="modal-header"><div><h3>Keranjang</h3><p style="font-size:11px;color:#6b7280;margin-top:3px;">Produk yang siap Anda pesan.</p></div><button class="close-modal" onclick="closeModal('modalCart')">✕</button></div><div class="cart-list" id="cartList"></div><div class="cart-total"><span>Total</span><span id="cartTotal">Rp0</span></div><br><button class="btn btn-primary" style="width:100%" onclick="checkoutCart()">Lanjutkan Pesanan</button></div></div>
+
+<div class="modal-overlay" id="modalJobProgress"><div class="modal"><div class="modal-header"><div><h3>Update Progres Pekerjaan</h3><p id="jpInfo" style="font-size:11px;color:#6b7280;margin-top:3px;"></p></div><button class="close-modal" onclick="closeModal('modalJobProgress')">✕</button></div>
+<div class="form-group"><label>Progres: <span id="jpVal">25</span>%</label><input type="range" id="jpRange" min="0" max="99" step="5" value="25" oninput="document.getElementById('jpVal').textContent=this.value"></div>
+<div class="form-group" style="margin-top:12px"><label>Catatan untuk pemilik lahan (opsional)</label><textarea id="jpNote" placeholder="Contoh: panen blok A selesai, sisa blok B..."></textarea></div><br>
+<div class="owner-actions"><button class="btn btn-outline" style="flex:1" onclick="saveJobProgress()">Simpan Progres</button><button class="btn btn-primary" style="flex:1" onclick="submitJobDoneFromModal()">✅ Ajukan Selesai</button></div>
+<p class="job-flow-hint">“Ajukan Selesai” mengirim pekerjaan ke pemilik lahan untuk dikonfirmasi. Setelah dikonfirmasi, pekerjaan Anda berstatus Selesai.</p></div></div>
 
 <!-- TOAST -->
 
@@ -3769,6 +3784,412 @@ updateCartCount();
   window.showLoginScreen=function(){stopAll();_sl();};
   const _lo=window.logout;
   window.logout=function(){stopAll();_lo();};
+})();
+
+/* =====================================================
+   v8 — ALUR PEKERJAAN LENGKAP, HASIL PANEN, MODE ADMIN
+   ---------------------------------------------------
+   Alur status per pekerja (disimpan di jobs/{id}.workerStates[uid]):
+   diambil -> berjalan <-> menunggu -> diajukan (pekerja ajukan selesai)
+           -> selesai (dikonfirmasi pemilik)  | atau kembali berjalan (revisi)
+   Status pekerjaan (job.status) dan progres dihitung otomatis
+   dari status semua pekerja, jadi pemilik & pekerja selalu sinkron.
+
+   ADMIN: isi ADMIN_EMAILS di bawah ATAU set field isAdmin:true
+   pada dokumen users/{uid} lewat Firebase Console (bukan dari aplikasi).
+===================================================== */
+const ADMIN_EMAILS = [
+  // "emailanda@gmail.com"
+];
+
+(function(){
+  const esc=v=>{const d=document.createElement("div");d.textContent=v==null?"":String(v);return d.innerHTML.replace(/"/g,"&quot;").replace(/'/g,"&#39;");};
+  const num=v=>{const n=Number(v);return Number.isFinite(n)?n:0;};
+  const clamp=n=>Math.max(0,Math.min(100,num(n)));
+  const TS=()=>firebase.firestore.FieldValue.serverTimestamp();
+  const $=id=>document.getElementById(id);
+  const CLOSED=["Selesai","Dibatalkan"];
+  const WS={
+    diambil:["Diambil","info"], berjalan:["Berjalan","info"], menunggu:["Menunggu","warning"],
+    diajukan:["Menunggu Konfirmasi","warning"], selesai:["Selesai","success"]
+  };
+  let jobsCache=[], harvestCache=[], jpJobId=null;
+
+  /* ---------- ADMIN ---------- */
+  function isAdminUser(p){
+    p=p||window.__petaniProfile||{};
+    const email=String(p.email||(auth.currentUser&&auth.currentUser.email)||"").toLowerCase();
+    return p.isAdmin===true || ADMIN_EMAILS.map(e=>String(e).toLowerCase()).includes(email);
+  }
+  window.isAdminUser=isAdminUser;
+
+  const _nr=window.normalizedRoles;
+  window.normalizedRoles=function(p){
+    if(isAdminUser(p)) return {pengguna:true,mitra:true};
+    return _nr(p);
+  };
+
+  /* ---------- Helper status pekerja ---------- */
+  function wIds(j){return Array.isArray(j.workerIds)?j.workerIds:(j.workerId?[j.workerId]:[]);}
+  function wName(j,uid){const i=(Array.isArray(j.workerIds)?j.workerIds:[]).indexOf(uid);return (j.workerNames&&j.workerNames[i])||"Pekerja";}
+  function wState(j,uid){
+    const s=j.workerStates&&j.workerStates[uid];
+    if(s) return {name:s.name||wName(j,uid),status:s.status||"diambil",progress:num(s.progress),note:s.note||"",at:num(s.at)};
+    // data lama (sebelum v8): turunkan dari status pekerjaan
+    const m={Berjalan:"berjalan",Menunggu:"menunggu",Selesai:"selesai"};
+    return {name:wName(j,uid),status:m[j.status]||"diambil",progress:num(j.progress),note:"",at:0};
+  }
+  function statesOf(j){return wIds(j).map(u=>({uid:u,...wState(j,u)}));}
+  function recompute(states){
+    const list=Object.values(states);
+    let status;
+    if(!list.length) status="Mencari Mitra";
+    else if(list.every(w=>w.status==="selesai")) status="Selesai";
+    else if(list.some(w=>w.status==="berjalan")) status="Berjalan";
+    else if(list.some(w=>w.status==="diajukan")) status="Menunggu Konfirmasi";
+    else if(list.some(w=>w.status==="menunggu")) status="Menunggu";
+    else status="Diambil";
+    const progress=list.length?Math.round(list.reduce((a,w)=>a+clamp(w.progress),0)/list.length):0;
+    return {status,progress};
+  }
+  function jobBadge(st){return st==="Berjalan"||st==="Diambil"?"info":st==="Selesai"?"success":st==="Dibatalkan"?"danger":"warning";}
+  function myName(){return (window.__petaniProfile||{}).name||(userData[currentRole]||{}).name||"Pekerja";}
+
+  /* ---------- Satu pintu perubahan status (transaksi) ---------- */
+  function mutate(id,fn,okMsg){
+    const ref=db.collection("jobs").doc(id);
+    return db.runTransaction(async tx=>{
+      const d=await tx.get(ref);
+      if(!d.exists) throw new Error("Pekerjaan tidak ditemukan.");
+      const j=d.data();
+      if(j.status==="Dibatalkan") throw new Error("Pekerjaan ini sudah dibatalkan pemilik lahan.");
+      const states={};
+      wIds(j).forEach(u=>{states[u]={...wState(j,u)};});
+      const extra=fn(j,states)||{};
+      const r=recompute(states);
+      tx.update(ref,{workerStates:states,status:r.status,progress:r.progress,updatedAt:TS(),...extra});
+    }).then(()=>{ if(okMsg) showToast(typeof okMsg==="function"?okMsg():okMsg); })
+      .catch(e=>showToast("Gagal: "+e.message));
+  }
+  const mine=(j,st)=>{
+    const m=st[currentUserId];
+    if(!m) throw new Error("Ambil pekerjaan terlebih dahulu.");
+    if(m.status==="selesai") throw new Error("Pekerjaan Anda sudah dikonfirmasi selesai.");
+    if(m.status==="diajukan") throw new Error("Pekerjaan sudah diajukan, menunggu konfirmasi pemilik lahan.");
+    return m;
+  };
+
+  /* ---------- Aksi pekerja ---------- */
+  window.takeJobFixed=function(id){
+    if(currentRole!=="mitra"||!currentUserId) return;
+    mutate(id,(j,st)=>{
+      if(CLOSED.includes(j.status)) throw new Error("Pekerjaan sudah ditutup.");
+      if(j.ownerId===currentUserId && !isAdminUser()) throw new Error("Anda tidak dapat mengambil pekerjaan milik sendiri.");
+      if(st[currentUserId]) throw new Error("Pekerjaan ini sudah Anda ambil.");
+      const max=Math.max(1,num(j.workers)||1);
+      if(Object.keys(st).length>=max) throw new Error("Kuota pekerja sudah penuh.");
+      const name=myName();
+      st[currentUserId]={name,status:"diambil",progress:0,note:"",at:Date.now()};
+      return {workerIds:firebase.firestore.FieldValue.arrayUnion(currentUserId),workerNames:firebase.firestore.FieldValue.arrayUnion(name)};
+    },"Pekerjaan diambil. Buka menu “Pekerjaan Saya” untuk memulai.");
+  };
+  window.processJobFixed=function(id){
+    if(currentRole!=="mitra") return;
+    mutate(id,(j,st)=>{const m=mine(j,st);m.status="berjalan";m.progress=Math.max(25,clamp(m.progress));m.at=Date.now();},"Pekerjaan mulai dikerjakan.");
+  };
+  window.waitJobFixed=function(id){
+    if(currentRole!=="mitra") return;
+    mutate(id,(j,st)=>{const m=mine(j,st);m.status="menunggu";m.at=Date.now();},"Status diubah menjadi menunggu.");
+  };
+  window.releaseJob=function(id){
+    if(currentRole!=="mitra") return;
+    if(!confirm("Lepas pekerjaan ini? Slot akan dibuka kembali untuk pekerja lain.")) return;
+    mutate(id,(j,st)=>{
+      const m=mine(j,st);
+      if(!["diambil","menunggu"].includes(m.status)) throw new Error("Pekerjaan yang sedang berjalan tidak bisa dilepas. Ajukan selesai atau hubungi pemilik lahan.");
+      const name=m.name; delete st[currentUserId];
+      return {workerIds:firebase.firestore.FieldValue.arrayRemove(currentUserId),workerNames:firebase.firestore.FieldValue.arrayRemove(name)};
+    },"Pekerjaan dilepas.");
+  };
+  window.openJobProgress=function(id){
+    const j=jobsCache.find(x=>x.id===id); if(!j) return;
+    const m=wState(j,currentUserId);
+    jpJobId=id;
+    $("jpInfo").textContent=(j.type||"Pekerjaan")+" • "+(j.location||"-");
+    const v=Math.min(99,Math.max(0,clamp(m.progress)));
+    $("jpRange").value=v; $("jpVal").textContent=v; $("jpNote").value=m.note||"";
+    openModal("modalJobProgress");
+  };
+  window.saveJobProgress=function(){
+    if(!jpJobId) return;
+    const val=Math.min(99,clamp($("jpRange").value)), note=$("jpNote").value.trim();
+    mutate(jpJobId,(j,st)=>{const m=mine(j,st);m.progress=val;m.note=note;m.status="berjalan";m.at=Date.now();},"Progres disimpan.")
+      .then(()=>closeModal("modalJobProgress"));
+  };
+  function submitDone(id,note){
+    mutate(id,(j,st)=>{const m=mine(j,st);m.status="diajukan";m.progress=100;if(note!==undefined)m.note=note;m.at=Date.now();},
+      "Diajukan selesai. Menunggu konfirmasi pemilik lahan.");
+  }
+  window.submitJobDoneFromModal=function(){
+    if(!jpJobId) return;
+    const id=jpJobId, note=$("jpNote").value.trim();
+    closeModal("modalJobProgress"); submitDone(id,note);
+  };
+  window.submitJobDone=function(id){
+    if(!confirm("Ajukan pekerjaan ini sebagai selesai? Pemilik lahan akan memeriksa dan mengkonfirmasi.")) return;
+    submitDone(id,undefined);
+  };
+
+  /* ---------- Aksi pemilik lahan ---------- */
+  window.confirmWorkerDone=function(id,uid){
+    if(currentRole!=="pengguna") return;
+    if(!confirm("Konfirmasi pekerjaan ini sudah selesai dikerjakan?")) return;
+    const job=jobsCache.find(x=>x.id===id);
+    mutate(id,(j,st)=>{
+      if(j.ownerId!==currentUserId) throw new Error("Hanya pemilik lahan yang dapat mengkonfirmasi.");
+      const m=st[uid]; if(!m||m.status!=="diajukan") throw new Error("Pekerja belum mengajukan selesai.");
+      m.status="selesai"; m.progress=100; m.at=Date.now();
+    },()=>job&&job.type==="Panen"?"Dikonfirmasi selesai. Silakan catat hasil panennya.":"Pekerjaan dikonfirmasi selesai.");
+  };
+  window.reviseWorker=function(id,uid){
+    if(currentRole!=="pengguna") return;
+    const note=prompt("Catatan revisi untuk pekerja (apa yang perlu diperbaiki?):");
+    if(note===null) return;
+    mutate(id,(j,st)=>{
+      if(j.ownerId!==currentUserId) throw new Error("Hanya pemilik lahan yang dapat meminta revisi.");
+      const m=st[uid]; if(!m||m.status!=="diajukan") throw new Error("Pekerja belum mengajukan selesai.");
+      m.status="berjalan"; m.progress=Math.min(90,clamp(m.progress)); m.note="Revisi: "+(note.trim()||"mohon diperiksa kembali"); m.at=Date.now();
+    },"Pekerjaan dikembalikan ke pekerja untuk direvisi.");
+  };
+
+  /* ---------- Muat & render pekerjaan ---------- */
+  window.loadJobs=function(){
+    if(!currentUserId) return;
+    if(window.__jobUnsub){try{window.__jobUnsub();}catch(e){} window.__jobUnsub=null;}
+    jobsCache=[];
+    let q=db.collection("jobs");
+    if(currentRole==="pengguna") q=q.where("ownerId","==",currentUserId);
+    window.__jobUnsub=q.onSnapshot(s=>{
+      jobsCache=s.docs.map(d=>({id:d.id,...d.data()}));
+      renderAllJobs();
+    },e=>showToast("Gagal memuat pekerjaan: "+e.message));
+    loadHarvests();
+  };
+
+  function detailsHtml(j,workerCount,max){
+    return `<div class="job-details"><div class="job-detail"><span>📅 Tanggal</span>${esc(j.startDate||"-")}</div><div class="job-detail"><span>👥 Pekerja</span>${workerCount}/${max} orang</div><div class="job-detail"><span>📍 Lokasi</span>${esc(j.location||"-")}</div><div class="job-detail"><span>⏱️ Durasi</span>${esc(j.duration||"-")}</div></div>`;
+  }
+  function headHtml(j,badgeText,badgeCls,sub){
+    return `<div class="job-top"><div class="job-title"><div class="job-icon">📋</div><div><h3>${esc(j.type||"Pekerjaan")}${j.farmName?" — "+esc(j.farmName):""}</h3><p>${esc(sub)}</p></div></div><span class="badge ${badgeCls}">${esc(badgeText)}</span></div>`;
+  }
+  function progHtml(j,p){
+    return `<div class="job-bottom"><span class="salary">${esc(j.wage||"-")}</span><span style="font-size:10px;color:var(--muted)">Progres ${p}%</span></div><div class="progress-wrap"><div class="progress-bar"><span style="width:${p}%"></span></div></div>`;
+  }
+
+  function ownerCard(j){
+    const p=clamp(j.progress), ws=statesOf(j), max=Math.max(1,num(j.workers)||1);
+    const wl=ws.length?`<div class="worker-list">`+ws.map(w=>{
+      const t=WS[w.status]||WS.diambil;
+      const act=w.status==="diajukan"
+        ?`<div class="owner-actions" style="margin:0"><button class="btn btn-primary" onclick="confirmWorkerDone('${j.id}','${w.uid}')">✔ Konfirmasi</button><button class="btn btn-outline" onclick="reviseWorker('${j.id}','${w.uid}')">↩ Revisi</button></div>`
+        :`<span class="badge ${t[1]}">${t[0]}</span>`;
+      return `<div class="worker-row"><div><strong>${esc(w.name)}</strong><small>${t[0]} • ${clamp(w.progress)}%${w.note?" • "+esc(w.note):""}</small></div>${act}</div>`;
+    }).join("")+`</div>`:`<div class="owner-note">Belum ada pekerja yang mengambil pekerjaan ini.</div>`;
+    const needConfirm=ws.some(w=>w.status==="diajukan");
+    const canHarvest=j.type==="Panen"&&ws.some(w=>w.status==="selesai")&&!harvestCache.some(h=>h.jobId===j.id);
+    const closed=CLOSED.includes(j.status);
+    return `<div class="job-card">${headHtml(j,j.status||"Mencari Mitra",jobBadge(j.status),j.location||"Lahan")}${detailsHtml(j,ws.length,max)}${progHtml(j,p)}${wl}
+      ${needConfirm?`<div class="job-note">⏳ Ada pekerja yang mengajukan selesai. Periksa lalu konfirmasi.</div>`:""}
+      <div class="owner-actions"><button class="btn btn-outline" onclick="editJobFixed('${j.id}')">Edit</button><button class="btn btn-danger" onclick="deleteJobFixed('${j.id}')">Hapus</button>${!closed?`<button class="btn btn-outline" onclick="cancelJobFixed('${j.id}')">Urungkan</button>`:""}${canHarvest?`<button class="btn btn-primary" onclick="openHarvestFromJob('${j.id}')">🌾 Catat Panen</button>`:""}</div></div>`;
+  }
+
+  function availableCard(j){
+    const p=clamp(j.progress), ws=wIds(j), max=Math.max(1,num(j.workers)||1);
+    return `<div class="job-card">${headHtml(j,j.status||"Mencari Mitra",jobBadge(j.status),(j.ownerName?"Pemilik: "+j.ownerName+" • ":"")+(j.location||"Lahan"))}${detailsHtml(j,ws.length,max)}${progHtml(j,p)}
+      <div class="owner-actions"><button class="btn btn-primary" onclick="takeJobFixed('${j.id}')">Ambil Pekerjaan</button></div></div>`;
+  }
+
+  function myCard(j){
+    const m=wState(j,currentUserId), t=WS[m.status]||WS.diambil, p=clamp(m.progress), max=Math.max(1,num(j.workers)||1);
+    const cancelled=j.status==="Dibatalkan";
+    let acts="";
+    if(cancelled) acts=`<div class="job-note">Pekerjaan ini dibatalkan oleh pemilik lahan.</div>`;
+    else if(m.status==="diambil") acts=`<div class="owner-actions"><button class="btn btn-primary" onclick="processJobFixed('${j.id}')">▶ Mulai</button><button class="btn btn-outline" onclick="releaseJob('${j.id}')">↩ Lepas</button></div>`;
+    else if(m.status==="berjalan") acts=`<div class="owner-actions"><button class="btn btn-outline" onclick="openJobProgress('${j.id}')">📈 Progres</button><button class="btn btn-outline" onclick="waitJobFixed('${j.id}')">⏸ Tunggu</button><button class="btn btn-primary" onclick="submitJobDone('${j.id}')">✅ Ajukan Selesai</button></div>`;
+    else if(m.status==="menunggu") acts=`<div class="owner-actions"><button class="btn btn-primary" onclick="processJobFixed('${j.id}')">▶ Lanjutkan</button><button class="btn btn-outline" onclick="releaseJob('${j.id}')">↩ Lepas</button></div>`;
+    else if(m.status==="diajukan") acts=`<div class="job-note">⏳ Menunggu konfirmasi pemilik lahan.</div>`;
+    else if(m.status==="selesai") acts=`<div class="job-note" style="background:#dcfce7;color:#166534">✔ Pekerjaan sudah dikonfirmasi selesai.</div>`;
+    const note=m.note?`<div class="owner-note">Catatan: ${esc(m.note)}</div>`:"";
+    return `<div class="job-card">${headHtml(j,cancelled?"Dibatalkan":t[0],cancelled?"danger":t[1],(j.ownerName?"Pemilik: "+j.ownerName+" • ":"")+(j.location||"Lahan"))}${detailsHtml(j,wIds(j).length,max)}${progHtml(j,p)}${note}${acts}</div>`;
+  }
+
+  function renderAllJobs(){
+    const jobs=[...jobsCache].sort((a,b)=>((b.createdAt&&b.createdAt.toMillis?b.createdAt.toMillis():0)-(a.createdAt&&a.createdAt.toMillis?a.createdAt.toMillis():0)));
+    const mitra=currentRole==="mitra";
+    const mineJobs=jobs.filter(j=>wIds(j).includes(currentUserId));
+    const grid=$("jobGrid");
+
+    if(grid){
+      if(!mitra){
+        grid.innerHTML=jobs.length?jobs.map(ownerCard).join(""):'<div class="empty-state">Belum ada pekerjaan. Klik "+ Buat Pekerjaan" untuk menambahkan.</div>';
+      }else{
+        const avail=jobs.filter(j=>!CLOSED.includes(j.status)
+          && !wIds(j).includes(currentUserId)
+          && wIds(j).length<Math.max(1,num(j.workers)||1)
+          && (j.ownerId!==currentUserId||isAdminUser()));
+        grid.innerHTML=avail.length?avail.map(availableCard).join(""):'<div class="empty-state">Belum ada pekerjaan tersedia untuk diambil.</div>';
+      }
+    }
+
+    const src=mitra?mineJobs:jobs;
+    const activeCount=mitra
+      ?mineJobs.filter(j=>j.status!=="Dibatalkan"&&wState(j,currentUserId).status!=="selesai").length
+      :jobs.filter(j=>!CLOSED.includes(j.status)).length;
+    const st=$("statJobCount"); if(st) st.textContent=activeCount;
+    const sum=$("dashboardJobSummary");
+    if(sum){
+      sum.innerHTML=src.slice(0,4).map(j=>{
+        const m=mitra?wState(j,currentUserId):null;
+        const pr=mitra?clamp(m.progress):clamp(j.progress);
+        const label=mitra?(WS[m.status]||WS.diambil)[0]:(j.status||"-");
+        return `<div class="list-item"><div class="list-main"><div class="list-icon">📋</div><div><strong>${esc(j.type||"Pekerjaan")}</strong><small>${esc(j.location||"Lahan")} • ${esc(label)}</small></div></div><span class="badge info">${pr}%</span></div>`;
+      }).join("")||`<div class="empty-state">${mitra?"Anda belum mengambil pekerjaan.":"Belum ada pekerjaan aktif."}</div>`;
+    }
+
+    const wrap=$("myJobsWrap");
+    if(wrap){
+      if(!mitra){ wrap.innerHTML=""; }
+      else{
+        const cnt=f=>mineJobs.filter(j=>j.status!=="Dibatalkan"&&f(wState(j,currentUserId).status)).length;
+        const stat=(ic,l,v,d)=>`<div class="stat-card"><div class="stat-top"><span>${l}</span><div class="stat-icon">${ic}</div></div><h3>${v}</h3><p>${d}</p></div>`;
+        wrap.innerHTML=`<div class="section-header"><div><h2>Pekerjaan Saya</h2><p>Pekerjaan yang Anda ambil, kerjakan, dan ajukan selesai.</p></div><button class="btn btn-primary" onclick="showPage('pekerjaan')">📍 Cari Pekerjaan</button></div>
+          <div class="stats-grid">${stat("▶","Dikerjakan",cnt(s=>["diambil","berjalan","menunggu"].includes(s)),"Sedang berjalan")}${stat("⏳","Konfirmasi",cnt(s=>s==="diajukan"),"Menunggu pemilik lahan")}${stat("✔","Selesai",cnt(s=>s==="selesai"),"Sudah dikonfirmasi")}${stat("📋","Total",mineJobs.length,"Semua pekerjaan")}</div>
+          <div class="job-grid">${mineJobs.length?mineJobs.map(myCard).join(""):'<div class="empty-state">Anda belum mengambil pekerjaan. Buka “Pekerjaan Tersedia” untuk mulai.</div>'}</div>`;
+      }
+    }
+    renderHarvests();
+  }
+
+  /* ---------- Hasil Panen (collection: harvests) ---------- */
+  function loadHarvests(){
+    if(window.__harvestUnsub){try{window.__harvestUnsub();}catch(e){} window.__harvestUnsub=null;}
+    harvestCache=[];
+    if(!currentUserId||currentRole!=="pengguna"){renderHarvests();return;}
+    window.__harvestUnsub=db.collection("harvests").where("ownerId","==",currentUserId).onSnapshot(s=>{
+      harvestCache=s.docs.map(d=>({id:d.id,...d.data()}));
+      renderAllJobs();
+    },e=>showToast("Gagal memuat hasil panen: "+e.message));
+  }
+  const fmtD=v=>{if(!v)return "-";const d=new Date(v+"T00:00:00");return isNaN(d)?esc(v):d.toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"});};
+  function harvestStatus(h){
+    if(!h.jobId) return ["Tercatat","success"];
+    const j=jobsCache.find(x=>x.id===h.jobId);
+    if(!j) return ["Tercatat","success"];
+    if(j.status==="Selesai") return ["Tercatat","success"];
+    if(j.status==="Dibatalkan") return ["Pekerjaan Dibatalkan","danger"];
+    return ["Menunggu Pekerjaan","warning"];
+  }
+  function renderHarvests(){
+    const tb=$("panenBody"); if(!tb) return;
+    const rows=[...harvestCache].sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
+    tb.innerHTML=rows.length?rows.map(h=>{
+      const st=harvestStatus(h);
+      return `<tr><td>${fmtD(h.date)}</td><td>${esc(h.farmName||"-")}</td><td>${esc(h.commodity||"-")}</td><td>${num(h.qty).toLocaleString("id-ID")} ${esc(h.unit||"")}</td><td>${esc(h.buyer||"-")}</td><td><span class="badge ${st[1]}">${st[0]}</span> <button class="link-button" onclick="deleteHarvest('${h.id}')">Hapus</button></td></tr>`;
+    }).join(""):'<tr><td colspan="6"><div class="empty-state">Belum ada hasil panen.</div></td></tr>';
+    const kg=harvestCache.reduce((a,h)=>a+(h.unit==="kg"?num(h.qty):h.unit==="ton"?num(h.qty)*1000:0),0);
+    const el=$("statHarvest");
+    if(el){el.textContent=kg.toLocaleString("id-ID")+" kg"; if(el.nextElementSibling) el.nextElementSibling.textContent=harvestCache.length?harvestCache.length+" catatan panen":"Belum ada catatan";}
+  }
+  function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+  function fillHarvestJobs(){
+    const sel=$("harvestJobId"); if(!sel) return;
+    const opts=jobsCache.filter(j=>j.ownerId===currentUserId&&j.type==="Panen"&&j.status!=="Dibatalkan"&&!harvestCache.some(h=>h.jobId===j.id));
+    sel.innerHTML='<option value="">Tanpa pekerjaan terkait</option>'+opts.map(j=>`<option value="${j.id}">${esc(j.farmName||"Lahan")} • ${esc(j.startDate||"-")} • ${esc(j.status||"")}</option>`).join("");
+  }
+  function prepHarvestForm(preJobId){
+    ["harvestQty","harvestPrice","harvestBuyer"].forEach(i=>{const e=$(i);if(e)e.value="";});
+    $("harvestDate").value=todayStr(); $("harvestUnit").value="kg";
+    fillHarvestJobs();
+    if(!currentUserId||currentRole!=="pengguna") return;
+    db.collection("farms").where("ownerId","==",currentUserId).get().then(s=>{
+      $("harvestFarmId").innerHTML='<option value="">Pilih lahan…</option>'+s.docs.map(d=>{const f=d.data();return `<option value="${d.id}" data-name="${esc(f.name)}" data-commodity="${esc(f.commodity||"")}">${esc(f.name)} — ${esc(f.commodity||"-")}</option>`;}).join("");
+      if(preJobId){$("harvestJobId").value=preJobId;window.onHarvestJobChange();}
+    }).catch(e=>showToast("Gagal memuat daftar lahan: "+e.message));
+  }
+  window.onHarvestFarmChange=function(){
+    const o=$("harvestFarmId").options[$("harvestFarmId").selectedIndex];
+    const c=o&&o.dataset.commodity; if(c&&[...$("harvestCommodity").options].some(x=>x.value===c)) $("harvestCommodity").value=c;
+  };
+  window.onHarvestJobChange=function(){
+    const j=jobsCache.find(x=>x.id===$("harvestJobId").value); if(!j) return;
+    if(j.farmId) $("harvestFarmId").value=j.farmId;
+    window.onHarvestFarmChange();
+    if(j.commodity&&[...$("harvestCommodity").options].some(x=>x.value===j.commodity)) $("harvestCommodity").value=j.commodity;
+    if(j.startDate) $("harvestDate").value=j.startDate;
+  };
+  window.openHarvestFromJob=function(id){window.__harvestPrefill=id;openModal("modalPanen");};
+  window.saveHarvest=function(){
+    if(!currentUserId||currentRole!=="pengguna"){showToast("Hanya pemilik lahan yang dapat mencatat panen.");return;}
+    const v=i=>($(i)&&$(i).value)||"";
+    const farmId=v("harvestFarmId"), qty=num(v("harvestQty"));
+    if(!farmId){showToast("Pilih lahan terlebih dahulu.");return;}
+    if(!v("harvestDate")){showToast("Tanggal panen belum diisi.");return;}
+    if(qty<=0){showToast("Jumlah hasil harus lebih dari 0.");return;}
+    const fo=$("harvestFarmId").options[$("harvestFarmId").selectedIndex];
+    db.collection("harvests").add({
+      ownerId:currentUserId, farmId, farmName:(fo&&fo.dataset.name)||"", jobId:v("harvestJobId")||null,
+      commodity:v("harvestCommodity"), date:v("harvestDate"), qty, unit:v("harvestUnit"),
+      price:num(String(v("harvestPrice")).replace(/[^\d]/g,"")), buyer:v("harvestBuyer").trim(),
+      createdAt:TS(), updatedAt:TS()
+    }).then(()=>{closeModal("modalPanen");showPage("panen");showToast("Hasil panen berhasil dicatat.");})
+      .catch(e=>showToast("Gagal menyimpan hasil panen: "+e.message));
+  };
+  window.deleteHarvest=function(id){
+    if(!confirm("Hapus catatan panen ini?")) return;
+    db.collection("harvests").doc(id).delete().then(()=>showToast("Catatan panen dihapus.")).catch(e=>showToast("Gagal menghapus: "+e.message));
+  };
+
+  const _om=window.openModal;
+  window.openModal=function(id){
+    _om(id);
+    if(id==="modalPanen"){const pre=window.__harvestPrefill||null;window.__harvestPrefill=null;prepHarvestForm(pre);}
+  };
+
+  /* ---------- Tampilan per mode (pekerja / pemilik / admin) ---------- */
+  function applyModeUi(role){
+    const mitra=role==="mitra", admin=isAdminUser();
+    const pp=$("page-panen");
+    if(pp){
+      const card=pp.querySelector(":scope > .card"), hdr=pp.querySelector(":scope > .section-header");
+      if(card) card.style.display=mitra?"none":"";
+      if(hdr) hdr.style.display=mitra?"none":"";
+      const w=$("myJobsWrap"); if(w) w.style.display=mitra?"block":"none";
+    }
+    if(typeof PAGE_TITLES!=="undefined"){
+      PAGE_TITLES.panen=mitra?["Pekerjaan Saya","Pekerjaan yang Anda ambil dan kerjakan"]:["Hasil Panen","Catatan hasil pertanian"];
+      PAGE_TITLES.pekerjaan=mitra?["Pekerjaan Tersedia","Cari pekerjaan pertanian yang bisa diambil"]:["Pekerjaan","Kelola aktivitas pekerjaan pertanian"];
+      PAGE_TITLES.transaksi=mitra?["Pendapatan","Riwayat transaksi dan pembayaran"]:["Transaksi","Riwayat transaksi dan pembayaran"];
+    }
+    const b2=document.querySelector(".mobile-nav-grid button:nth-child(2)");
+    if(b2){
+      b2.innerHTML=mitra?"<div>💼</div>Saya":"<div>🌱</div>Lahan";
+      b2.setAttribute("onclick",mitra?"mobileNav('panen', this)":"mobileNav('lahan', this)");
+    }
+    const badge=$("adminBadge");
+    if(badge){badge.style.display=admin?"":"none";badge.textContent="ADMIN • "+(mitra?"Pekerja":"Pemilik Lahan");}
+    if(admin){const r=$("profileRole");if(r)r.textContent="Admin — mode "+(mitra?"Pekerja / Mitra":"Pemilik Lahan");}
+    renderAllJobs();
+  }
+  const _sri2=window.setRoleInterface;
+  window.setRoleInterface=function(role){_sri2(role);applyModeUi(role);};
+
+  /* ---------- Bersihkan listener saat keluar ---------- */
+  function stopV8(){
+    if(window.__harvestUnsub){try{window.__harvestUnsub();}catch(e){} window.__harvestUnsub=null;}
+    jobsCache=[];harvestCache=[];
+  }
+  const _lo2=window.logout; window.logout=function(){stopV8();_lo2();};
+  const _sl2=window.showLoginScreen; window.showLoginScreen=function(){stopV8();_sl2();};
 })();
 
 </script>
